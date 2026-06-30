@@ -7,11 +7,17 @@ import os
 
 from app.services.vectorstore import get_vectorstore
 from app.prompts.qa_prompt import get_qa_prompt
+from app.core.logger import get_logger, log_with_fields
 
 _chain = None
-
+logger = get_logger(__name__)
 
 def format_docs(docs: List[Document]) -> str:
+    log_with_fields(
+        logger, "info", "Chunks retrieved",
+        chunk_count=len(docs),
+        pages=[doc.metadata.get("page") for doc in docs]
+    )
     return "\n\n".join(
         f"[Page {doc.metadata['page']}]\n{doc.page_content}"
         for doc in docs

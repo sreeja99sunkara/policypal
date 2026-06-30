@@ -30,8 +30,9 @@ app = FastAPI(
 )
 
 # Register routers
-from app.routers import query                   
+from app.routers import query, ingestion                   
 app.include_router(query.router, prefix="/api") 
+app.include_router(ingestion.router, prefix="/api")
 
 @app.get("/health")
 def health():

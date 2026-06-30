@@ -9,6 +9,7 @@ CHROMA_DIR = "data/processed/chroma"
 
 _vectorstore = None
 
+
 def get_vectorstore() -> Chroma:
     global _vectorstore
     if _vectorstore is None:
@@ -18,12 +19,21 @@ def get_vectorstore() -> Chroma:
         )
     return _vectorstore
 
+
 def ingest_documents(docs: List[Document]) -> None:
     global _vectorstore
 
-    # Wipe existing data to prevent duplication
+    # Release any existing Chroma client connection first
+    if _vectorstore is not None:
+        try:
+            _vectorstore._client.reset()
+        except Exception:
+            pass
+        _vectorstore = None
+
+    # Now safe to wipe existing data
     if os.path.exists(CHROMA_DIR):
-        shutil.rmtree(CHROMA_DIR)
+        shutil.rmtree(CHROMA_DIR, ignore_errors=True)
 
     _vectorstore = Chroma.from_documents(
         documents=docs,
@@ -31,3 +41,10 @@ def ingest_documents(docs: List[Document]) -> None:
         persist_directory=CHROMA_DIR
     )
     print(f"Ingested {len(docs)} chunks into ChromaDB")
+
+def has_documents() -> bool:
+    vs = get_vectorstore()
+    try:
+        return vs._collection.count() > 0
+    except Exception:
+        return False
