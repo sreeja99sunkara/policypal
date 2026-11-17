@@ -83,6 +83,7 @@ class _TableOut:
     bbox: tuple
     rows: List[str] = field(default_factory=list)  # serialized rows, in order
     header_summary: str = ""
+    title: str = ""  # paragraph above + in-table title rows ("" if none)
 
 
 # --------------------------------------------------------------------------- #
@@ -390,6 +391,7 @@ def _serialize_table(tab, words: list, paragraph_title: str = "",
     out = _TableOut(bbox=tuple(tab.bbox))
     # Title = paragraph directly above the table + any title rows inside it.
     caption = " / ".join([paragraph_title] * bool(paragraph_title) + captions)
+    out.title = caption
     out.header_summary = _header_sentence(caption, col_parts)
 
     # ---- data rows ----
@@ -542,7 +544,9 @@ def load_and_chunk_tables(pdf_path: str, chunk_size: int = CHUNK_SIZE,
                     # two pages (Schedule of Benefits) shares one key and one header chunk.
                     table_key = hashlib.sha1(f"{filename}|{ser.header_summary}".encode()).hexdigest()[:16]
                     meta = {**base_meta, "chunk_type": "table", "table_index": t_idx,
-                            "table_key": table_key}
+                            "table_key": table_key,
+                            # metadata only (not embedded); shown as the source title in the UI
+                            "table_title": ser.title}
                     # one table continued across two text columns -> same header twice
                     if ser.header_summary not in page_headers:
                         page_headers.add(ser.header_summary)
