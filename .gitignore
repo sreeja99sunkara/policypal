@@ -4,3 +4,5 @@ __pycache__/
 data/processed/
 *.pyc
 .ipynb_checkpoints/
+# duplicate uploads moved aside (identical SHA-256 to a kept PDF)
+data/raw/_duplicates/
