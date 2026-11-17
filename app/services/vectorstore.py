@@ -1,13 +1,15 @@
-import shutil
-import os
+from typing import List
+
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from typing import List
+
+from app.core.logger import get_logger, log_with_fields
 from app.services.embedder import get_embeddings
 
 CHROMA_DIR = "data/processed/chroma"
 
 _vectorstore = None
+logger = get_logger(__name__)
 
 
 def get_vectorstore() -> Chroma:
@@ -20,31 +22,30 @@ def get_vectorstore() -> Chroma:
     return _vectorstore
 
 
-def ingest_documents(docs: List[Document]) -> None:
-    global _vectorstore
-
-    # Release any existing Chroma client connection first
-    if _vectorstore is not None:
-        try:
-            _vectorstore._client.reset()
-        except Exception:
-            pass
-        _vectorstore = None
-
-    # Now safe to wipe existing data
-    if os.path.exists(CHROMA_DIR):
-        shutil.rmtree(CHROMA_DIR, ignore_errors=True)
-
-    _vectorstore = Chroma.from_documents(
-        documents=docs,
-        embedding=get_embeddings(),
-        persist_directory=CHROMA_DIR
-    )
-    print(f"Ingested {len(docs)} chunks into ChromaDB")
-
 def has_documents() -> bool:
-    vs = get_vectorstore()
     try:
-        return vs._collection.count() > 0
+        return get_vectorstore()._collection.count() > 0
     except Exception:
         return False
+
+
+def ingest_documents(docs: List[Document]) -> None:
+    vs = get_vectorstore()
+
+    # Replace, don't append: empty the collection via Chroma's API
+    # (no file deletion, so no Windows file lock), then add the new chunks.
+    vs.reset_collection()
+    vs.add_documents(docs)
+
+    stored = vs._collection.count()
+    log_with_fields(logger, "info", "Ingestion stored", chunks_in=len(docs), chunks_in_store=stored)
+    if stored != len(docs):
+        logger.warning(f"Store has {stored} chunks but {len(docs)} were ingested")
+
+    # The BM25 index is built lazily from the collection; drop the stale one.
+    # (Local import: hybrid imports this module.)
+    try:
+        from app.services.hybrid import invalidate_bm25
+    except ImportError:  # hybrid search optional (rank_bm25 not installed)
+        return
+    invalidate_bm25()
