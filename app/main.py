@@ -13,8 +13,10 @@ async def lifespan(app: FastAPI):
     from app.services.embedder import get_embeddings
     from app.services.vectorstore import get_vectorstore
     from app.services.rag_chain import get_rag_chain
+    from app.services.hybrid import build_bm25
     get_embeddings()
     get_vectorstore()
+    build_bm25()  # keyword index for hybrid search; rebuilt lazily after each ingestion
     get_rag_chain()
     print("All services ready.")
     yield
