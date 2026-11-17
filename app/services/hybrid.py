@@ -36,8 +36,10 @@ def bm25_search(question: str, k: int = 20) -> list[Document]:
 def hybrid_search(question: str, k: int = 20,
                   w_vector: float = 0.5, w_bm25: float = 0.5,
                   rrf_k: int = 60) -> list[Document]:
-    vector_hits = get_vectorstore().similarity_search(question, k=k)
-    keyword_hits = bm25_search(question, k=k)
+    # A zero weight drops that source entirely; otherwise its hits would still be
+    # appended with fused score 0 and fill candidate slots.
+    vector_hits = get_vectorstore().similarity_search(question, k=k) if w_vector > 0 else []
+    keyword_hits = bm25_search(question, k=k) if w_bm25 > 0 else []
 
     fused: dict[str, float] = {}
     by_key: dict[str, Document] = {}
