@@ -1,0 +1,25 @@
+id,question,faithfulness,answer_relevancy,llm_context_precision_with_reference,context_recall,latency_s
+1,What is the waiting period for pre-existing diseases?,1.0,0.9543962285168025,0.3333333333,0.0,2.2
+2,What is the room rent limit per day?,1.0,0.8042305733647046,0.99999999995,1.0,1.26
+3,Is maternity covered? What is the sub-limit?,0.5,0.8635173243367972,0.3333333333,1.0,1.34
+4,What are the exclusions?,1.0,0.8021940751751208,0.0,0.0,1.83
+5,What are the sum insured options available?,1.0,0.9081541424450089,0.0,0.0,1.04
+6,What is the ICU charge limit?,1.0,,0.3333333333,1.0,1.28
+7,Are AYUSH treatments covered?,0.75,0.8946305908615021,0.9999999999666667,1.0,1.45
+8,What is the free look period?,1.0,0.8492528235107186,0.9999999999,1.0,0.89
+9,Is there coverage for day care procedures?,1.0,0.8801922974969777,0.99999999995,0.6666666666666666,1.11
+10,What happens if I miss a premium payment?,1.0,0.7905484326892082,0.9999999999,0.5,1.37
+11,Is treatment for asthma included in the insurance?,1.0,,0.99999999995,1.0,2.32
+12,Is treatment for a new born baby covered?,0.7142857142857143,0.819386518685309,0.99999999995,0.4,7.17
+13,What is the waiting period for cataract surgery?,1.0,,0.0,0.0,6.98
+14,What is the initial waiting period after the policy starts?,1.0,,,0.0,4.08
+15,How many days of pre-hospitalisation and post-hospitalisation expenses are covered?,1.0,,0.9999999999,1.0,6.26
+16,"Is ambulance cover included, and what is the limit?",1.0,,0.3333333333,0.6666666666666666,5.33
+17,How soon must a claim be intimated to the insurer?,1.0,0.8286620671808201,0.8333333332916666,1.0,6.13
+18,Is there a co-payment under this policy?,1.0,0.8437241135817682,0.99999999995,0.0,6.14
+19,"Does the policy offer a cumulative bonus, and how much?",1.0,0.8826570070053844,0.9999999999666667,1.0,6.08
+20,Is there a health check-up benefit?,1.0,0.0,0.0,0.0,4.73
+21,Are organ donor expenses covered?,1.0,0.952956429032823,0.9999999999666667,0.6666666666666666,6.47
+22,"Can I cancel the policy mid-term, and is there a refund?",1.0,0.816541814548724,0.3333333333,0.6666666666666666,6.56
+23,Does the policy cover dental treatment?,1.0,,0.0,0.5,6.12
+24,What is the cashless claim procedure?,0.9166666666666666,,0.0,0.25,7.83

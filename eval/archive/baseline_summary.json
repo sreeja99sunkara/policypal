@@ -1,0 +1,28 @@
+{
+  "date": "20261117_185415",
+  "generator_model": "openai/gpt-oss-120b",
+  "judge_model": "qwen/qwen3.8-27b",
+  "questions_scored": 24,
+  "metrics_measured": [
+    "faithfulness",
+    "llm_context_precision_with_reference",
+    "context_recall"
+  ],
+  "scores": {
+    "faithfulness": 0.953,
+    "llm_context_precision_with_reference": 0.587,
+    "context_recall": 0.555
+  },
+  "failed_metric_cells": {
+    "faithfulness": 0,
+    "llm_context_precision_with_reference": 1,
+    "context_recall": 0
+  },
+  "complete": false,
+  "avg_latency_s": 4.165,
+  "unanswerable_total": 1,
+  "unanswerable_correctly_refused": 1,
+  "unanswerable_detail": {
+    "What is the maximum entry age for the policy?": true
+  }
+}

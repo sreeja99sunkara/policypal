@@ -1,0 +1,193 @@
+{
+  "qwen/qwen3.8-27b|1|c1b19d3e72b6": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.9543962285168025,
+    "llm_context_precision_with_reference": 0.3333333333,
+    "context_recall": 0.0
+  },
+  "qwen/qwen3.8-27b|2|5e5558fe1743": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.8042305733647046,
+    "llm_context_precision_with_reference": 0.99999999995,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|3|8dbaad86cc2e": {
+    "faithfulness": 0.5,
+    "answer_relevancy": 0.8635173243367972,
+    "llm_context_precision_with_reference": 0.3333333333,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|4|1dc5eac8661c": {
+    "faithfulness": 1.0,
+    "llm_context_precision_with_reference": 0.0,
+    "context_recall": 0.0,
+    "answer_relevancy": 0.8021940751751208
+  },
+  "qwen/qwen3.8-27b|5|8454407005fc": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.9081541424450089,
+    "llm_context_precision_with_reference": 0.0,
+    "context_recall": 0.0
+  },
+  "qwen/qwen3.8-27b|7|e4234c56d2f8": {
+    "faithfulness": 0.75,
+    "answer_relevancy": 0.8946305908615021,
+    "llm_context_precision_with_reference": 0.9999999999666667,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|8|08b2701f2008": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.8492528235107186,
+    "llm_context_precision_with_reference": 0.9999999999,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|9|71a1b4f55f97": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.8801922974969777,
+    "llm_context_precision_with_reference": 0.99999999995,
+    "context_recall": 0.6666666666666666
+  },
+  "qwen/qwen3.8-27b|10|93ddc8e3c803": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.7905484326892082,
+    "llm_context_precision_with_reference": 0.9999999999,
+    "context_recall": 0.5
+  },
+  "qwen/qwen3.8-27b|11|1eae5678917a": {
+    "faithfulness": 1.0,
+    "llm_context_precision_with_reference": 0.99999999995,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|12|22d920572c5a": {
+    "answer_relevancy": 0.819386518685309,
+    "llm_context_precision_with_reference": 0.99999999995,
+    "context_recall": 0.4,
+    "faithfulness": 0.7142857142857143
+  },
+  "qwen/qwen3.8-27b|13|538e8f4738d8": {
+    "faithfulness": 1.0,
+    "context_recall": 0.0,
+    "llm_context_precision_with_reference": 0.0
+  },
+  "qwen/qwen3.8-27b|14|27506739c2bd": {
+    "faithfulness": 1.0,
+    "context_recall": 0.0
+  },
+  "qwen/qwen3.8-27b|15|3e1fe1a5b0ff": {
+    "faithfulness": 1.0,
+    "llm_context_precision_with_reference": 0.9999999999,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|16|02ad5daf3423": {
+    "faithfulness": 1.0,
+    "llm_context_precision_with_reference": 0.3333333333,
+    "context_recall": 0.6666666666666666
+  },
+  "qwen/qwen3.8-27b|17|eac5b4338cc7": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.8286620671808201,
+    "llm_context_precision_with_reference": 0.8333333332916666,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|18|ff3206027bad": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.8437241135817682,
+    "llm_context_precision_with_reference": 0.99999999995,
+    "context_recall": 0.0
+  },
+  "qwen/qwen3.8-27b|19|b29e118c426d": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.8826570070053844,
+    "llm_context_precision_with_reference": 0.9999999999666667,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|20|aabbc81d52f8": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.0,
+    "llm_context_precision_with_reference": 0.0,
+    "context_recall": 0.0
+  },
+  "qwen/qwen3.8-27b|21|e1541e6920bb": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.952956429032823,
+    "llm_context_precision_with_reference": 0.9999999999666667,
+    "context_recall": 0.6666666666666666
+  },
+  "qwen/qwen3.8-27b|22|9d7828a3f7d6": {
+    "faithfulness": 1.0,
+    "answer_relevancy": 0.816541814548724,
+    "llm_context_precision_with_reference": 0.3333333333,
+    "context_recall": 0.6666666666666666
+  },
+  "qwen/qwen3.8-27b|23|ed6ff06138d7": {
+    "faithfulness": 1.0,
+    "llm_context_precision_with_reference": 0.0,
+    "context_recall": 0.5
+  },
+  "qwen/qwen3.8-27b|24|cb115190fac4": {
+    "faithfulness": 0.9166666666666666,
+    "llm_context_precision_with_reference": 0.0,
+    "context_recall": 0.25
+  },
+  "qwen/qwen3.8-27b|6|23b7159424c8": {
+    "faithfulness": 1.0,
+    "llm_context_precision_with_reference": 0.3333333333,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|1|8129ae50efd4": {
+    "faithfulness": 0.5,
+    "llm_context_precision_with_reference": 0.3333333333,
+    "context_recall": 0.0
+  },
+  "qwen/qwen3.8-27b|2|15860bce2a06": {
+    "faithfulness": 1.0,
+    "llm_context_precision_with_reference": 0.9999999999,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|3|ea851b38b8a8": {
+    "faithfulness": 0.2222222222222222,
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|4|36284386da43": {},
+  "qwen/qwen3.8-27b|5|3ea349dfb5d5": {
+    "faithfulness": 0.1111111111111111
+  },
+  "qwen/qwen3.8-27b|6|1a51d946cffe": {},
+  "qwen/qwen3.8-27b|7|2f965055adfd": {},
+  "qwen/qwen3.8-27b|9|2055b2d67672": {
+    "llm_context_precision_with_reference": 0.9999999999666667,
+    "context_recall": 0.6666666666666666
+  },
+  "qwen/qwen3.8-27b|10|dd0b60af9e82": {
+    "context_recall": 0.5
+  },
+  "qwen/qwen3.8-27b|11|1a982c7b354d": {},
+  "qwen/qwen3.8-27b|12|a75f79e6b412": {},
+  "qwen/qwen3.8-27b|13|c30ce2513482": {
+    "context_recall": 0.0
+  },
+  "qwen/qwen3.8-27b|14|9610e77ec7cf": {
+    "context_recall": 0.0
+  },
+  "qwen/qwen3.8-27b|15|fbc95694c8f6": {},
+  "qwen/qwen3.8-27b|16|2eddb905951f": {
+    "faithfulness": 0.6666666666666666,
+    "context_recall": 0.5
+  },
+  "qwen/qwen3.8-27b|17|731bd9f1b6d7": {
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|18|da2ee7b6de38": {
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|19|37e0efac23fd": {
+    "context_recall": 1.0
+  },
+  "qwen/qwen3.8-27b|20|002ec6384055": {
+    "context_recall": 0.5
+  },
+  "qwen/qwen3.8-27b|21|87f88b8d5fac": {},
+  "qwen/qwen3.8-27b|22|0a88b88903cd": {},
+  "qwen/qwen3.8-27b|23|5daf32ba3e04": {},
+  "qwen/qwen3.8-27b|24|d694fa40acf5": {}
+}

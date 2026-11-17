@@ -1,0 +1,25 @@
+id,question,faithfulness,answer_relevancy,llm_context_precision_with_reference,context_recall,latency_s
+1,What is the waiting period for pre-existing diseases?,0.5,,0.3333333333,0.0,31.17
+2,What is the room rent limit per day?,1.0,,0.9999999999,1.0,17.93
+3,Is maternity covered? What is the sub-limit?,0.2222222222222222,,,1.0,14.93
+4,What are the exclusions?,,,,,13.98
+5,What are the sum insured options available?,0.1111111111111111,,,,16.23
+6,What is the ICU charge limit?,,,,,13.13
+7,Are AYUSH treatments covered?,,,,,14.32
+8,What is the free look period?,1.0,0.8492528235107186,0.9999999999,1.0,11.67
+9,Is there coverage for day care procedures?,,,0.9999999999666667,0.6666666666666666,10.4
+10,What happens if I miss a premium payment?,,,,0.5,11.18
+11,Is treatment for asthma included in the insurance?,,,,,13.14
+12,Is treatment for a new born baby covered?,,,,,13.66
+13,What is the waiting period for cataract surgery?,,,,0.0,17.07
+14,What is the initial waiting period after the policy starts?,,,,0.0,10.57
+15,How many days of pre-hospitalisation and post-hospitalisation expenses are covered?,,,,,14.44
+16,"Is ambulance cover included, and what is the limit?",0.6666666666666666,,,0.5,14.25
+17,How soon must a claim be intimated to the insurer?,,,,1.0,11.08
+18,Is there a co-payment under this policy?,,,,1.0,12.19
+19,"Does the policy offer a cumulative bonus, and how much?",,,,1.0,15.26
+20,Is there a health check-up benefit?,,,,0.5,15.42
+21,Are organ donor expenses covered?,,,,,15.81
+22,"Can I cancel the policy mid-term, and is there a refund?",,,,,14.4
+23,Does the policy cover dental treatment?,,,,,12.39
+24,What is the cashless claim procedure?,,,,,16.7
