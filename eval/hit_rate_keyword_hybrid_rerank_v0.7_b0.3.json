@@ -1,0 +1,162 @@
+{
+  "label": "keyword_hybrid_rerank_v0.7_b0.3",
+  "mode": "hybrid_rerank",
+  "weights": {
+    "w_vector": 0.7,
+    "w_bm25": 0.3
+  },
+  "eval_file": "eval/eval_keyword_set.json",
+  "timestamp": "2026-11-18T00:47:59",
+  "mean_latency_ms": 9182.1,
+  "top_k": 5,
+  "evaluated": 6,
+  "hits": 6,
+  "hit_rate": 1.0,
+  "skipped_no_page_in_source": [],
+  "results": [
+    {
+      "id": 101,
+      "question": "How is the cost of a coronary stent paid under the DPCO / NPPA capping?",
+      "source": "Page 6, B(3)",
+      "expected_pages_0idx": [
+        5
+      ],
+      "retrieved_pages_0idx": [
+        5,
+        5,
+        7,
+        11,
+        6
+      ],
+      "n_chunks": 5,
+      "retrieved_chunk_types": [
+        "text",
+        "text",
+        "table",
+        "text",
+        "text"
+      ],
+      "hit": true
+    },
+    {
+      "id": 102,
+      "question": "Is in utero treatment for twin-twin transfusion syndrome (TTTS) covered?",
+      "source": "Page 7, B(15)",
+      "expected_pages_0idx": [
+        6
+      ],
+      "retrieved_pages_0idx": [
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "n_chunks": 5,
+      "retrieved_chunk_types": [
+        "text",
+        "table",
+        "table",
+        "table",
+        "table"
+      ],
+      "hit": true
+    },
+    {
+      "id": 103,
+      "question": "Is IONM covered by the policy?",
+      "source": "Page 8, B(25)",
+      "expected_pages_0idx": [
+        7
+      ],
+      "retrieved_pages_0idx": [
+        7,
+        6,
+        6,
+        7,
+        0
+      ],
+      "n_chunks": 5,
+      "retrieved_chunk_types": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "table"
+      ],
+      "hit": true
+    },
+    {
+      "id": 104,
+      "question": "What does the policy mean by Advanced Medicine?",
+      "source": "Page 5, Specific Definitions",
+      "expected_pages_0idx": [
+        4
+      ],
+      "retrieved_pages_0idx": [
+        4,
+        4,
+        5,
+        4,
+        6
+      ],
+      "n_chunks": 5,
+      "retrieved_chunk_types": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "hit": true
+    },
+    {
+      "id": 105,
+      "question": "What does exclusion Code Excl 19 cover?",
+      "source": "Page 12, C(19)",
+      "expected_pages_0idx": [
+        11
+      ],
+      "retrieved_pages_0idx": [
+        11,
+        10,
+        6,
+        11,
+        6
+      ],
+      "n_chunks": 5,
+      "retrieved_chunk_types": [
+        "text",
+        "text",
+        "text",
+        "text",
+        "text"
+      ],
+      "hit": true
+    },
+    {
+      "id": 106,
+      "question": "Are ZIFT or GIFT procedures covered?",
+      "source": "Page 12, C(17)",
+      "expected_pages_0idx": [
+        11
+      ],
+      "retrieved_pages_0idx": [
+        11,
+        7,
+        6,
+        0,
+        6
+      ],
+      "n_chunks": 5,
+      "retrieved_chunk_types": [
+        "text",
+        "text",
+        "text",
+        "table",
+        "table"
+      ],
+      "hit": true
+    }
+  ]
+}

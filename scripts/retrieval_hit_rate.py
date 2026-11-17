@@ -8,13 +8,17 @@ subtract 1 before comparing.
 
 Usage:
     python scripts/retrieval_hit_rate.py <label> [--mode MODE]
+        [--w-vector 0.5] [--w-bm25 0.5] [--eval-file eval/eval_set.json]
 MODE (defaults to the label when the label is a mode name, else "app"):
     vector_top5    vector similarity top 5, no reranker
     vector_rerank  vector top 20 -> cross-encoder -> top 5
-    hybrid_rerank  hybrid (vector+BM25, RRF) top 25 -> cross-encoder -> top 5
-    app            whatever rag_chain.retrieve_and_rerank currently does
+    hybrid_rerank  hybrid (vector+BM25, RRF) top 25 -> cross-encoder -> top 5;
+                   uses --w-vector / --w-bm25 (a weight of 0 drops that source)
+    app/pipeline   whatever rag_chain.retrieve_and_rerank currently does
+                   (hybrid at its default 0.5/0.5 + header attachment)
 Writes eval/hit_rate_<label>.json
 """
+import argparse
 import json
 import os
 import re
@@ -39,14 +43,20 @@ from app.services.vectorstore import get_vectorstore  # noqa: E402
 EVAL_PATH = ROOT / "eval" / "eval_set.json"
 TOP_K = 5
 
-MODES = {
-    "vector_top5": lambda q: get_vectorstore().similarity_search(q, k=TOP_K),
-    "vector_rerank": lambda q: rerank(q, get_vectorstore().similarity_search(q, k=20), top_n=TOP_K),
-    "hybrid_rerank": lambda q: rerank(q, hybrid_search(q, k=20)[:25], top_n=TOP_K),
-    "app": retrieve_and_rerank,
-    # current production path: hybrid -> rerank top 5 -> attach table headers (<= 6 chunks)
-    "pipeline": retrieve_and_rerank,
-}
+def build_modes(w_vector: float, w_bm25: float) -> dict:
+    return {
+        "vector_top5": lambda q: get_vectorstore().similarity_search(q, k=TOP_K),
+        "vector_rerank": lambda q: rerank(q, get_vectorstore().similarity_search(q, k=20), top_n=TOP_K),
+        "hybrid_rerank": lambda q: rerank(
+            q, hybrid_search(q, k=20, w_vector=w_vector, w_bm25=w_bm25)[:25], top_n=TOP_K),
+        "app": retrieve_and_rerank,
+        # current production path: hybrid -> rerank top 5 -> attach table headers (<= 6 chunks)
+        "pipeline": retrieve_and_rerank,
+    }
+
+
+MODES = build_modes(0.5, 0.5)
+WEIGHTED_MODES = {"hybrid_rerank"}
 # Modes scored on everything they return (the final LLM context), not just the first 5.
 FULL_CONTEXT_MODES = {"app", "pipeline"}
 
@@ -82,17 +92,21 @@ def chunk_pages(doc) -> list[int]:
 
 
 def main() -> None:
-    args = sys.argv[1:]
-    if not args:
-        sys.exit("usage: python scripts/retrieval_hit_rate.py <label> [--mode MODE]")
-    label = args[0]
-    mode = args[args.index("--mode") + 1] if "--mode" in args else (label if label in MODES else "app")
-    if mode not in MODES:
-        sys.exit(f"unknown mode {mode!r}; choose from {sorted(MODES)}")
-    retrieve = MODES[mode]
-    print(f"label={label} mode={mode}")
+    ap = argparse.ArgumentParser(description="Retrieval hit rate (local only).")
+    ap.add_argument("label", help="output goes to eval/hit_rate_<label>.json")
+    ap.add_argument("--mode", choices=sorted(MODES), default=None)
+    ap.add_argument("--w-vector", type=float, default=0.5, help="hybrid_rerank only")
+    ap.add_argument("--w-bm25", type=float, default=0.5, help="hybrid_rerank only")
+    ap.add_argument("--eval-file", default=str(EVAL_PATH.relative_to(ROOT)))
+    a = ap.parse_args()
+    label = a.label
+    mode = a.mode or (label if label in MODES else "app")
+    retrieve = build_modes(a.w_vector, a.w_bm25)[mode]
+    weights = {"w_vector": a.w_vector, "w_bm25": a.w_bm25} if mode in WEIGHTED_MODES else None
+    eval_path = (ROOT / a.eval_file).resolve()
+    print(f"label={label} mode={mode} weights={weights} eval_file={a.eval_file}")
 
-    items = json.loads(EVAL_PATH.read_text(encoding="utf-8"))["items"]
+    items = json.loads(eval_path.read_text(encoding="utf-8"))["items"]
     results, skipped, latencies = [], [], []
     retrieve("warm-up query")  # load models before timing
     for item in items:
@@ -127,6 +141,8 @@ def main() -> None:
     summary = {
         "label": label,
         "mode": mode,
+        "weights": weights,  # null for modes that don't use hybrid weights
+        "eval_file": a.eval_file,
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "mean_latency_ms": round(1000 * sum(latencies) / len(latencies), 1) if latencies else None,
         "top_k": TOP_K,

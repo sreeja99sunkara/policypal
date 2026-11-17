@@ -1,0 +1,53 @@
+{
+  "_readme": "Keyword-style eval set for the Star Health Assure policy wording PDF (20 pages). Each question hinges on a distinctive term in the policy text (abbreviation, named procedure/treatment, defined term, or exclusion code). Ground truths and pages were taken from the PDF text, not from retrieval output. Page numbers in 'source' are viewer page numbers (1-based); chunk metadata is 0-based. verified=false until checked by a human.",
+  "items": [
+    {
+      "id": 101,
+      "question": "How is the cost of a coronary stent paid under the DPCO / NPPA capping?",
+      "ground_truth": "For coronary stenting, medicines, implants and similar items, the Company pays the cost of the stent as per the Drug Price Control Order (DPCO) / National Pharmaceuticals Pricing Authority (NPPA) capping.",
+      "answerable": true,
+      "source": "Page 6, B(3)",
+      "verified": false
+    },
+    {
+      "id": 102,
+      "question": "Is in utero treatment for twin-twin transfusion syndrome (TTTS) covered?",
+      "ground_truth": "Yes. Twin-twin transfusion syndrome (TTTS) is one of the conditions listed under In Utero Fetal Surgery/Intervention, which is payable after a waiting period of 24 months from the date of inception of the policy. The waiting period does not apply to treatment of congenital internal disease/defects of the unborn.",
+      "answerable": true,
+      "source": "Page 7, B(15)",
+      "verified": false
+    },
+    {
+      "id": 103,
+      "question": "Is IONM covered by the policy?",
+      "ground_truth": "Yes. IONM (Intra Operative Neuro Monitoring) is listed under Coverage for Modern Treatment and is covered, wherever medically indicated, as in-patient or day care treatment in a hospital up to the sum insured, including pre- and post-hospitalisation expenses.",
+      "answerable": true,
+      "source": "Page 8, B(25)",
+      "verified": false
+    },
+    {
+      "id": 104,
+      "question": "What does the policy mean by Advanced Medicine?",
+      "ground_truth": "Advanced Medicine means targeted therapy with monoclonal antibodies such as NUCALA (Mepolizumab, spelled 'Mepoluzimab' in the PDF) which are proven and are used to treat chronic severe refractory asthma.",
+      "answerable": true,
+      "source": "Page 5, Specific Definitions",
+      "verified": false
+    },
+    {
+      "id": 105,
+      "question": "What does exclusion Code Excl 19 cover?",
+      "ground_truth": "Code Excl 19 excludes circumcision (unless necessary for treatment of a disease not excluded under the policy or necessitated by an accident), preputioplasty, frenuloplasty, preputial dilatation and removal of smegma.",
+      "answerable": true,
+      "source": "Page 12, C(19)",
+      "verified": false
+    },
+    {
+      "id": 106,
+      "question": "Are ZIFT or GIFT procedures covered?",
+      "ground_truth": "They fall under exclusion Code Excl 17 (sterility and infertility), which excludes assisted reproduction services including advanced reproductive technologies such as IVF, ZIFT, GIFT and ICSI, except to the extent covered under Coverage 16 (Assisted Reproduction Treatment).",
+      "answerable": true,
+      "source": "Page 12, C(17)",
+      "verified": false
+    }
+  ]
+}
