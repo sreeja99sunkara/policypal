@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.schemas.query import QueryRequest, QueryResponse
 from app.services.rag_chain import get_rag_chain
 from app.services.vectorstore import has_documents
+from app.services.citations import rewrite_citations
 from app.core.logger import get_logger, log_with_fields
 
 router = APIRouter()
@@ -37,7 +38,10 @@ def query(request: QueryRequest, chain=Depends(get_chain)):
         logger.exception(f"RAG chain failed | latency={latency}s | question_length={len(request.question)}")
         raise HTTPException(status_code=500, detail="Failed to process your question. Please try again.")
 
+    # The LLM cites the 0-indexed pages from its context; convert to viewer pages here.
+    answer, cited_pages = rewrite_citations(result["answer"])
     return QueryResponse(
-        answer=result["answer"],
-        sources=result["sources"]
+        answer=answer,
+        sources=result["sources"],
+        cited_pages=cited_pages,
     )

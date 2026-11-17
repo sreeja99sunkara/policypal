@@ -12,7 +12,7 @@ from langchain_core.runnables import RunnableLambda
 from app.services.reranker import rerank
 from app.services.hybrid import hybrid_search
 from app.services.vectorstore import get_vectorstore
-from operator import itemgetter
+from app.services.citations import build_sources
 
 _chain = None
 logger = get_logger(__name__)
@@ -87,19 +87,25 @@ def get_rag_chain():
         temperature=0,
         api_key=os.getenv("GROQ_API_KEY")
     )
-    #retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
-    retriever = RunnableLambda(retrieve_and_rerank)
+    _chain = build_chain(RunnableLambda(retrieve_and_rerank), llm)
+    return _chain
+
+
+def build_chain(retriever, llm):
+    """Retrieve once, format once, then fan out to answer + sources.
+
+    The prompt "context" is format_docs(docs) (0-indexed "[Page N]" labels),
+    unchanged, so generation is unaffected. "sources" is a list of structured
+    source dicts (1-indexed viewer pages) built from the same docs; the /query
+    route converts the answer's citations to viewer pages.
+    """
     prompt = get_qa_prompt()
     parser = StrOutputParser()
-
-    # Retrieve once, format once, then fan out to answer + sources
-    _chain = (
+    return (
         RunnableParallel(docs=retriever, question=RunnablePassthrough())
         | RunnablePassthrough.assign(context=lambda x: format_docs(x["docs"]))
         | RunnableParallel(
             answer=prompt | llm | parser,
-            sources=itemgetter("context"),
+            sources=lambda x: build_sources(x["docs"]),
         )
     )
-
-    return _chain
