@@ -53,12 +53,13 @@ RUN --mount=type=bind,from=builder-api,source=/wheels,target=/wheels \
 # volume mount points (a fresh named volume inherits this ownership).
 RUN mkdir -p /app/data/raw /app/data/processed/chroma "$HF_HOME" \
     && chown -R app:app /app /models
-COPY --chown=app:app app/ ./app/
 USER app
+# Models before the app code, so a code change does not re-download them.
 RUN if [ "$PRELOAD_MODELS" = "true" ]; then \
         python -c "from sentence_transformers import SentenceTransformer, CrossEncoder; \
 SentenceTransformer('BAAI/bge-small-en-v1.5'); CrossEncoder('BAAI/bge-reranker-base'); print('models cached')"; \
     fi
+COPY --chown=app:app app/ ./app/
 EXPOSE 8000
 # Long start period: on an empty HF_HOME the first start downloads the embedding
 # model and the reranker (~1.2 GB) before /health answers.
@@ -88,18 +89,35 @@ CMD ["streamlit", "run", "streamlit_app.py", "--server.address=0.0.0.0", "--serv
 # store is empty), not at build time; see README "Deploying a demo".
 FROM base AS demo
 ARG PRELOAD_MODELS=false
-ENV HF_HOME=/models/huggingface     STREAMLIT_BROWSER_GATHER_USAGE_STATS=false     STREAMLIT_SERVER_HEADLESS=true     DEMO_MODE=true     DEFAULT_POLICY_PDF=/app/demo/policy.pdf     PORT=7860     API_PORT=8000
+ENV HF_HOME=/models/huggingface \
+    STREAMLIT_BROWSER_GATHER_USAGE_STATS=false \
+    STREAMLIT_SERVER_HEADLESS=true \
+    DEMO_MODE=true \
+    DEFAULT_POLICY_PDF=/app/demo/policy.pdf \
+    PORT=7860 \
+    API_PORT=8000
 WORKDIR /app
-RUN --mount=type=bind,from=builder-api,source=/wheels,target=/wheels-api     --mount=type=bind,from=builder-ui,source=/wheels,target=/wheels-ui     --mount=type=bind,source=docker/requirements-api.txt,target=/tmp/requirements-api.txt     --mount=type=bind,source=docker/requirements-ui.txt,target=/tmp/requirements-ui.txt     pip install --no-cache-dir --no-index --find-links /wheels-api --find-links /wheels-ui         -r /tmp/requirements-api.txt -r /tmp/requirements-ui.txt
-RUN mkdir -p /app/data/raw /app/data/processed/chroma /app/demo "$HF_HOME"     && chown -R app:app /app /models
+RUN --mount=type=bind,from=builder-api,source=/wheels,target=/wheels-api \
+    --mount=type=bind,from=builder-ui,source=/wheels,target=/wheels-ui \
+    --mount=type=bind,source=docker/requirements-api.txt,target=/tmp/requirements-api.txt \
+    --mount=type=bind,source=docker/requirements-ui.txt,target=/tmp/requirements-ui.txt \
+    pip install --no-cache-dir --no-index --find-links /wheels-api --find-links /wheels-ui \
+        -r /tmp/requirements-api.txt -r /tmp/requirements-ui.txt
+RUN mkdir -p /app/data/raw /app/data/processed/chroma /app/demo "$HF_HOME" \
+    && chown -R app:app /app /models
+USER app
+# Models before the app code, so a code change does not re-download ~1.2 GB.
+RUN if [ "$PRELOAD_MODELS" = "true" ]; then \
+        python -c "from sentence_transformers import SentenceTransformer, CrossEncoder; \
+SentenceTransformer('BAAI/bge-small-en-v1.5'); CrossEncoder('BAAI/bge-reranker-base'); print('models cached')"; \
+    fi
+COPY --chown=app:app data/raw/StarHealthAssureInsurancePolicy-Policy-wording.pdf /app/demo/policy.pdf
+COPY --chown=app:app --chmod=755 docker/start-demo.sh ./start-demo.sh
 COPY --chown=app:app app/ ./app/
 COPY --chown=app:app streamlit_app.py ./
-COPY --chown=app:app --chmod=755 docker/start-demo.sh ./start-demo.sh
-COPY --chown=app:app data/raw/StarHealthAssureInsurancePolicy-Policy-wording.pdf /app/demo/policy.pdf
-USER app
-RUN if [ "$PRELOAD_MODELS" = "true" ]; then         python -c "from sentence_transformers import SentenceTransformer, CrossEncoder; SentenceTransformer('BAAI/bge-small-en-v1.5'); CrossEncoder('BAAI/bge-reranker-base'); print('models cached')";     fi
 EXPOSE 7860
 # Healthy once the API has loaded both models and indexed the policy (it only
 # answers /health after startup) and Streamlit is serving.
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20m --retries=3     CMD python -c "import os,urllib.request,sys; ok=lambda u: urllib.request.urlopen(u, timeout=4).status == 200; sys.exit(0 if ok('http://127.0.0.1:%s/health' % os.environ['API_PORT']) and ok('http://127.0.0.1:%s/_stcore/health' % os.environ['PORT']) else 1)"
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20m --retries=3 \
+    CMD python -c "import os,urllib.request,sys; ok=lambda u: urllib.request.urlopen(u, timeout=4).status == 200; sys.exit(0 if ok('http://127.0.0.1:%s/health' % os.environ['API_PORT']) and ok('http://127.0.0.1:%s/_stcore/health' % os.environ['PORT']) else 1)"
 CMD ["./start-demo.sh"]
