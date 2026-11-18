@@ -1,218 +1,458 @@
 # PolicyPal
 
-> RAG-powered chatbot that answers questions from insurance policy documents using LangChain, ChromaDB, and FastAPI
+Ask plain-English questions about an insurance policy PDF and get answers that
+cite the pages they came from.
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.138-green)
-![LangChain](https://img.shields.io/badge/LangChain-1.3-orange)
-![ChromaDB](https://img.shields.io/badge/ChromaDB-1.5-purple)
-![Groq](https://img.shields.io/badge/LLM-Groq%20Llama%203.3%2070B-red)
+![PolicyPal UI](docs/screenshot.png)
 
 ---
 
-## The Problem
+## What PolicyPal is
 
-Insurance policy documents are dense, lengthy, and full of legal language. Finding a specific clause like the waiting period for pre-existing diseases or the room rent limit requires reading dozens of pages. PolicyPal lets you ask plain English questions and get accurate, cited answers directly from the policy document.
+PolicyPal is a retrieval-augmented generation (RAG) app over a single
+insurance policy document. You upload a policy PDF; PolicyPal parses it
+(including its tables), indexes it locally, and answers questions using only
+the retrieved policy text. Every answer comes with the source chunks it was
+given, labelled with the PDF viewer's page numbers, and the pages the answer
+cites are marked.
+
+It was built and evaluated on one document: the Star Health Assure Insurance
+Policy wording (20 pages).
 
 ---
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    subgraph Ingest["Ingest (POST /api/upload)"]
+        A[Policy PDF] --> B["Table-aware loader<br/>PyMuPDF find_tables<br/>rows keep their headers<br/>+ text chunks 500/80"]
+        B --> C["Embeddings<br/>BAAI/bge-small-en-v1.5"]
+        C --> D[(Chroma<br/>data/processed/chroma)]
+    end
+
+    subgraph Query["Query (POST /api/query)"]
+        Q[Question] --> V["Vector search<br/>top 20"]
+        Q --> K["BM25 keyword search<br/>top 20"]
+        V --> F["Fusion (RRF)<br/>first 25"]
+        K --> F
+        F --> R["Cross-encoder rerank<br/>BAAI/bge-reranker-base<br/>top 5"]
+        R --> H["Table header attachment<br/>(max 6 chunks)"]
+        H --> L["Groq LLM<br/>(GROQ_MODEL)"]
+        L --> O["Answer + cited sources<br/>(viewer page numbers)"]
+    end
+
+    D -.-> V
+    D -.-> K
 ```
-                        INDEX PIPELINE (run once)
-┌─────────────┐    ┌──────────────┐    ┌────────────────┐    ┌─────────────┐
-│  Policy PDF │───▶│  PyMuPDF     │───▶│ RecursiveChar  │───▶│  ChromaDB   │
-│             │    │  Loader      │    │ TextSplitter   │    │  Vector     │
-└─────────────┘    └──────────────┘    │ (500/80)       │    │  Store      │
-                                       └────────────────┘    └─────────────┘
-                                                                     │
-                        QUERY PIPELINE (every question)              │
-┌─────────────┐    ┌──────────────┐    ┌────────────────┐           │
-│    User     │───▶│  BGE-small   │───▶│  Similarity    │───────────┘
-│  Question   │    │  Embeddings  │    │  Search (k=3)  │
-└─────────────┘    └──────────────┘    └────────────────┘
-                                                │
-                                                ▼
-                                       ┌────────────────┐    ┌─────────────┐
-                                       │  RAG Prompt    │───▶│  Groq LLM   │
-                                       │  Template      │    │  Llama 3.3  │
-                                       └────────────────┘    │  70B        │
-                                                             └─────────────┘
-                                                                     │
-                                                                     ▼
-                                                             ┌─────────────┐
-                                                             │   Answer +  │
-                                                             │   Sources   │
-                                                             └─────────────┘
-```
+
+**Ingest.** `app/services/table_loader.py` finds tables with PyMuPDF
+(`find_tables`, `lines_strict`) and writes each table row as its own chunk with
+its column headers repeated, for example
+`[SCHEDULE OF BENEFITS] S.No: 29 | Benefit: Co-payment | Sum Insured (INR) -> 5 lacs / … / 2 Crore: subject to co-payment of 10% …`.
+Each table also gets one header chunk ("Table SCHEDULE OF BENEFITS gives
+Benefit for each Sum Insured (INR): 5 lacs, 10 lacs, …"). The table title is the
+paragraph directly above the table plus any title rows inside it. Text that is
+not in a table is split with `RecursiveCharacterTextSplitter` (500 / 80).
+Chunks that are identical on several pages are stored once, with all pages in
+the `pages` metadata.
+
+**Query.** `retrieve_and_rerank` in `app/services/rag_chain.py` fuses vector
+and BM25 candidates, reranks them with a cross-encoder, and, when a table row
+is retrieved, adds that table's header chunk so the row's columns make sense.
+The LLM sees chunks labelled with 0-indexed page numbers; the API converts the
+answer's `(Page N)` citations to the viewer's 1-indexed page numbers.
 
 ---
 
-## Tech Stack
+## Tech stack
 
-| Component | Technology | Why |
-|---|---|---|
-| LLM | Groq Llama 3.3 70B | Free, fast inference, strong reasoning |
-| Embeddings | BAAI/bge-small-en-v1.5 | Free, runs on CPU, 384 dims |
-| Vector Store | ChromaDB | Local persistence, no infra needed |
-| Orchestration | LangChain LCEL | Composable, transparent pipeline |
-| PDF Parsing | PyMuPDF | Fast, reliable text extraction |
-| API | FastAPI | Auto docs, Pydantic validation |
-
----
-
-## Project Structure
-
-```
-policypal/
-├── app/
-│   ├── main.py              # FastAPI entry point
-│   ├── routers/
-│   │   ├── ingestion.py     # POST /api/upload
-│   │   └── query.py         # POST /api/query
-│   ├── services/
-│   │   ├── document_loader.py  # PDF loading + chunking
-│   │   ├── embedder.py         # HuggingFace embeddings (singleton)
-│   │   ├── vectorstore.py      # ChromaDB wrapper (singleton)
-│   │   └── rag_chain.py        # LCEL RAG chain (singleton)
-│   ├── schemas/
-│   │   └── query.py         # Pydantic request/response models
-│   ├── prompts/
-│   │   └── qa_prompt.py     # RAG prompt template
-│   └── core/
-│       ├── config.py        # Settings loader
-│       └── logger.py        # Structured JSON logging
-├── data/
-│   ├── raw/                 # Uploaded PDFs
-│   └── processed/           # ChromaDB persistence
-├── notebooks/
-│   ├── 01_explore_pdf.ipynb
-│   ├── 02_embeddings.ipynb
-│   └── 03_rag_chain.ipynb
-├── notes/
-│   └── eval_set.md          # Manual evaluation results
-├── .env.example
-└── requirements.txt
-```
+| Component | Choice |
+|---|---|
+| LLM (answers) | Groq, model from `GROQ_MODEL` (default `openai/gpt-oss-120b`) |
+| Embeddings | `BAAI/bge-small-en-v1.5` (local, CPU) |
+| Keyword search | `rank-bm25` over the indexed chunks |
+| Reranker | `BAAI/bge-reranker-base` cross-encoder (local, CPU) |
+| Vector store | ChromaDB, persisted in `data/processed/chroma` |
+| PDF parsing | PyMuPDF (text + `find_tables`) |
+| Orchestration | LangChain (LCEL) |
+| API / UI | FastAPI, Streamlit |
+| Evaluation | RAGAS (Groq judge), plus a local retrieval hit-rate script |
 
 ---
 
 ## Setup
 
-### Prerequisites
-- Python 3.11+
-- [Groq API key](https://console.groq.com) (free)
-
-### Installation
+Developed on Windows with Python 3.13 (3.13.5).
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/yourusername/policypal.git
-cd policypal
-
-# 2. Create and activate virtual environment
+# 1. Virtual environment
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+venv\Scripts\activate          # macOS/Linux: source venv/bin/activate
 
-# 3. Install dependencies
+# 2. Dependencies
 pip install -r requirements.txt
 
-# 4. Set up environment variables
-cp .env.example .env
-# Edit .env and add your GROQ_API_KEY
-
-# 5. Run the server
-uvicorn app.main:app --reload
+# 3. Environment variables
+copy .env.example .env         # macOS/Linux: cp .env.example .env
 ```
 
-Visit `http://localhost:8000/docs` to see the interactive API.
+`.env` keys:
+
+| Key | Used by | Notes |
+|---|---|---|
+| `GROQ_API_KEY` | API, evaluation | Required. Get one at https://console.groq.com |
+| `GROQ_MODEL` | API | Answering model; default `openai/gpt-oss-120b` |
+| `GROQ_JUDGE_MODEL` | `scripts/run_ragas.py` | RAGAS judge model, kept separate from the answering model |
+| `POLICYPAL_API_URL` | Streamlit | Optional; default `http://localhost:8000` |
+
+**First run.** The embedding and reranker models (about 1 GB together) are
+downloaded from Hugging Face the first time they are used. The first ingest of
+a PDF is also slow because table extraction runs on every page: a full
+re-index of the 20-page sample policy (parsing, tables and embeddings) took
+about 80 seconds on the CPU-only development machine.
+
+### Run
+
+```bash
+# API (no --reload: a reloading server restarts on every file change and
+# keeps Chroma's files open, which blocks re-indexing on Windows)
+uvicorn app.main:app
+
+# UI, in a second terminal
+streamlit run streamlit_app.py
+```
+
+The API docs are at `http://localhost:8000/docs`; the UI opens at
+`http://localhost:8501`. Upload a PDF in the sidebar ("Index document"), then
+ask questions in the chat.
+
+To re-index from the command line instead (stop the API first):
+
+```bash
+python scripts/reindex.py data/raw/StarHealthAssureInsurancePolicy-Policy-wording.pdf
+```
+
+Uploading or re-indexing replaces the previously indexed document.
+
+### Run with Docker
+
+Requires Docker with Compose v2 and a `.env` file in the repo root (same keys
+as above). `.env` is read by Compose at run time and is not copied into the
+images.
+
+```bash
+docker compose build      # API image (CPU-only PyTorch) and UI image
+docker compose up -d      # API on http://localhost:8000, UI on http://localhost:8501
+curl http://localhost:8000/health
+curl -X POST http://localhost:8000/api/upload \
+  -F "file=@data/raw/StarHealthAssureInsurancePolicy-Policy-wording.pdf"
+docker compose down       # keeps the volumes; `down -v` deletes the index and model cache
+```
+
+- Two named volumes: `chroma` (the index, survives restarts and `down`) and
+  `hf-cache` (Hugging Face models, `HF_HOME`). The images contain no data and
+  no index; upload a PDF after the first start.
+- First start: the embedding model is downloaded into `hf-cache` before the
+  API reports healthy, and the reranker (about 1.1 GB) is downloaded during
+  the first query. That first query can take many minutes on a slow
+  connection, longer than the UI's 60-second request timeout, so send it with
+  curl (or build with `PRELOAD_MODELS=true`, which bakes both models into the
+  image: `docker compose build --build-arg PRELOAD_MODELS=true api`).
+- Measured on the development machine (Docker Desktop, CPU only, slow
+  network): build about 21 minutes; API image 2.5 GB, UI image 894 MB;
+  upload of the 20-page policy 36 s (486 chunks); first query 21 minutes
+  (reranker download), later queries 5–11 s.
+- The API runs uvicorn without `--reload` as a non-root user. Uploaded PDFs
+  are written inside the container (`/app/data/raw`) and are not kept when
+  the container is recreated; the index is.
+- Not verified: `PRELOAD_MODELS=true` builds, running on Linux or macOS
+  hosts, GPU use (the images are CPU-only), and the UI in a browser (only its
+  health endpoint was checked).
 
 ---
 
-## API Usage
+## API
 
-### Upload a policy PDF
+### `POST /api/upload`
+
 ```bash
 curl -X POST http://localhost:8000/api/upload \
-  -F "file=@data/raw/star_health_family_optima.pdf"
+  -F "file=@data/raw/StarHealthAssureInsurancePolicy-Policy-wording.pdf"
 ```
 
-Response:
 ```json
 {
   "job_id": "a1b2c3d4-...",
   "status": "completed",
-  "filename": "star_health_family_optima.pdf",
-  "chunks_created": 324
+  "filename": "StarHealthAssureInsurancePolicy-Policy-wording.pdf",
+  "chunks_created": 486
 }
 ```
 
-### Ask a question
+### `POST /api/query`
+
 ```bash
 curl -X POST http://localhost:8000/api/query \
   -H "Content-Type: application/json" \
-  -d '{"question": "What is the waiting period for pre-existing diseases?"}'
+  -d '{"question": "Is there a co-payment under this policy?"}'
 ```
 
-Response:
+Response (abridged; `text` holds the full chunk):
+
 ```json
 {
-  "answer": "The waiting period for pre-existing diseases is 36 months from the date of inception of the policy (Page 11).",
-  "sources": "[Page 11]\nwaiting period of 36 months..."
+  "answer": "Yes. The policy includes a co-payment of 10 % of each and every claim amount (Page 10). ...",
+  "sources": [
+    {
+      "page": 10,
+      "pages": [10],
+      "chunk_type": "text",
+      "title": null,
+      "snippet": "... 30. Co-payment: This policy is subject to co-payment of 10% of each and every claim amount for fresh as well as renewal policies for insured person whose age at the time of entry is 61 years and above.",
+      "text": "..."
+    }
+  ],
+  "cited_pages": [2, 10]
 }
 ```
 
-### Health check
-```bash
-curl http://localhost:8000/health
+- `sources`: retrieved chunks in retrieval order. `page` / `pages` are viewer
+  page numbers (the first page of the PDF is 1). `chunk_type` is `text` or
+  `table`; `title` is the table's title when known.
+- `cited_pages`: sorted viewer pages cited in the answer (empty if none).
+
+### `GET /health`
+
+Returns `{"status": "ok"}`.
+
+---
+
+## Project structure
+
+```
+policypal/
+├── app/
+│   ├── main.py                 # FastAPI app; lifespan warms models and builds BM25
+│   ├── routers/
+│   │   ├── ingestion.py        # POST /api/upload
+│   │   └── query.py            # POST /api/query (rewrites citations to viewer pages)
+│   ├── schemas/query.py        # request/response models (Source, cited_pages)
+│   ├── prompts/qa_prompt.py    # answering prompt
+│   ├── services/
+│   │   ├── table_loader.py     # table-aware PDF loading and chunking
+│   │   ├── document_loader.py  # load_and_chunk (falls back to the plain loader)
+│   │   ├── embedder.py         # bge-small embeddings
+│   │   ├── vectorstore.py      # Chroma; ingest replaces the collection
+│   │   ├── hybrid.py           # BM25 + vector fusion (RRF)
+│   │   ├── reranker.py         # bge-reranker-base cross-encoder
+│   │   ├── rag_chain.py        # retrieval, header attachment, LCEL chain
+│   │   └── citations.py        # structured sources, page-citation rewriting
+│   └── core/logger.py          # structured JSON logging
+├── streamlit_app.py            # chat UI with per-chunk sources
+├── scripts/
+│   ├── reindex.py              # re-index a PDF through the upload path
+│   ├── retrieval_hit_rate.py   # local retrieval hit rate (no LLM)
+│   ├── run_ragas.py            # RAGAS evaluation (calls Groq)
+│   └── inspect_retrieval.py    # print retrieved chunks for a question
+├── eval/
+│   ├── eval_set.json           # 25 questions with ground truths
+│   ├── eval_keyword_set.json   # 6 keyword-style questions (not yet human-verified)
+│   ├── hit_rate_*.json         # retrieval hit-rate results
+│   └── archive/                # frozen RAGAS baseline (see its README)
+├── tests/test_citations.py
+├── notebooks/                  # early exploration
+├── data/raw/                   # uploaded PDFs
+└── data/processed/chroma/      # vector store (not committed)
 ```
 
 ---
 
-## Evaluation Results
+## Tests
 
-Tested on Star Health Assure Insurance Policy with 10 questions:
+```bash
+python -m pytest -q tests
+```
 
-| Result | Count |
+The tests mock the LLM (no Groq calls). They check the structured sources
+(1-indexed pages), the citation rewriting (`(Page 4)` → `(Page 5)`,
+`(Pages 4-5)`, `(Page 4, 5)` and similar), and that the prompt the LLM receives
+is byte-identical to the original format. One test runs a real retrieval
+against the local index and is skipped if no document is indexed.
+
+---
+
+## Evaluation
+
+All numbers come from one policy document and small question sets. Treat them
+as a sanity check of this project, not a benchmark.
+
+### RAGAS baseline
+
+From `eval/archive/baseline_summary.json` (run `20261117_185415`).
+
+Baseline retrieval setup: the original loader (PyMuPDF text, no table
+handling, 500/80 chunks), plain vector search returning the top 3 chunks, no
+BM25, no reranking, no table header attachment.
+
+| Metric | Score |
 |---|---|
-| ✅ Fully correct | 4/10 |
-| ⚠️ Partially correct | 5/10 |
-| ❌ Wrong | 1/10 |
+| Faithfulness | 0.953 |
+| Context precision (with reference) | 0.587 (scored on 23 of 24 questions; one judge call failed) |
+| Context recall | 0.555 |
+| Answer relevancy | not measured |
 
-**No hallucinations observed** - the system correctly refused to invent answers when information wasn't in the document.
+- Generator `openai/gpt-oss-120b`, judge `qwen/qwen3.8-27b` (a single judge
+  model), 24 answerable questions from one policy.
+- The one unanswerable question ("What is the maximum entry age for the
+  policy?") was correctly refused (1 of 1).
+- The baseline's answers were not saved, so which version of the prompt
+  produced them is not recorded.
+- At the time of the baseline, `scripts/run_ragas.py` took the contexts it
+  scored from its own plain vector top-3 retriever. For the baseline that
+  matched what the model saw. The script now scores the chunks the chain
+  actually put in the prompt (`--retriever pipeline`, the default);
+  `--retriever vector_k3` keeps the baseline's retrieval for both answers and
+  contexts.
 
-Main failure mode: table data in PDFs gets flattened during extraction, losing column context (affects room rent tiers, sum insured options).
+**TODO: final RAGAS comparison pending judge.** The after-pipeline RAGAS run
+(table-aware parsing + hybrid search + reranking + header attachment) is
+incomplete because most judge calls failed, so it is not reported here. Its
+saved contexts came from vector top 3 rather than from the pipeline; they have
+been recomputed from the pipeline into
+`eval/answers_after_pipeline_refreshed.json` (answers unchanged) for
+re-scoring with
+`python scripts/run_ragas.py --reuse-answers --answers-file eval/answers_after_pipeline_refreshed.json`.
 
----
+#### Reproduce the baseline
 
-## Known Limitations
+No single commit holds the exact baseline state, so this is an approximation.
+Commit `05e06d8` has the original loader and the vector top-3 chain; the eval
+set and `run_ragas.py` were committed later, and the baseline's generator
+(`openai/gpt-oss-120b`) was set in an uncommitted edit, so `05e06d8` needs a
+one-line model change. The worktree keeps its own `data/processed/chroma`, so
+the main index is not touched. Running RAGAS calls Groq. Commands are for
+Windows, run from the repo root, using the main checkout's venv:
 
-1. **Table extraction** - PyMuPDF flattens tables into plain text, losing column relationships. Queries about tiered data (room rent by sum insured) return incomplete answers.
-2. **Single document** - re-uploading a PDF wipes the previous one. Multi-document support requires deduplication logic.
-3. **Page number mismatch** - cited page numbers are PDF page indices, which may differ from printed page numbers in the document.
-4. **Synchronous ingestion** - large PDFs block the `/upload` endpoint until fully processed. No background processing yet.
-5. **No conversation memory** - each query is independent. Follow-up questions don't retain context from previous answers.
+```bat
+git worktree add ..\policypal-baseline 05e06d8
+mkdir ..\policypal-baseline\scripts ..\policypal-baseline\eval
+copy scripts\run_ragas.py ..\policypal-baseline\scripts\
+copy eval\eval_set.json ..\policypal-baseline\eval\
+copy .env ..\policypal-baseline\
+cd ..\policypal-baseline
+rem In app\services\rag_chain.py, change model="llama-3.3-70b-versatile"
+rem to model="openai/gpt-oss-120b" (the baseline's generator).
+..\policypal\venv\Scripts\uvicorn app.main:app
+rem In a second terminal (in ..\policypal-baseline):
+rem   curl -X POST http://localhost:8000/api/upload -F "file=@data/raw/StarHealthAssureInsurancePolicy-Policy-wording.pdf"
+rem Stop uvicorn, then:
+..\policypal\venv\Scripts\python scripts\run_ragas.py
+```
 
----
+Differences from the original run: `05e06d8` contains the original prompt,
+while the prompt used for the baseline is not recorded (see above);
+`eval/eval_set.json` was edited after the baseline run; and the judge's
+scores vary between runs.
 
-## Future Work
+### Retrieval hit rate (local, no LLM)
 
-| Priority | Feature | Why |
+`scripts/retrieval_hit_rate.py` counts a question as a hit when any of the
+top 5 retrieved chunks comes from the page(s) named in the question's
+`source` field. Main set: the 17 questions in `eval/eval_set.json` that have a
+source page. Keyword set: the 6 questions in `eval/eval_keyword_set.json`,
+each built around a distinctive term (an abbreviation like IONM, a named
+procedure, a defined term, an exclusion code).
+
+| Retrieval mode | Main set (17) | Keyword set (6) |
 |---|---|---|
-| P0 | Streamlit UI | Demo-able without curl commands |
-| P0 | RAGAS evaluation | Formal metrics (faithfulness, recall) |
-| P1 | Table-aware parsing | Fix biggest retrieval failure mode |
-| P1 | Hybrid search (BM25 + vector) | Better keyword matching |
-| P1 | Cross-encoder reranking | Improve retrieval precision |
-| P2 | Multi-turn chat memory | Handle follow-up questions |
-| P3 | Docker + deployment | Live demo URL |
-| P3 | LangSmith tracing | Production observability |
+| Vector top 5 | 14/17 | 5/6 |
+| Vector top 20 → rerank top 5 | 14/17 | 5/6 |
+| Hybrid (vector + BM25) top 25 → rerank top 5 | 15/17 | 6/6 |
+
+- The hybrid row is the same at every weighting tried (vector/BM25 = 0.7/0.3,
+  0.5/0.5, 0.3/0.7 and BM25-only 0.0/1.0). The weights made no difference.
+- The differences between modes are one question on each set, which is
+  within what a different question set could change.
+
+Reproduce:
+
+```bash
+python scripts/retrieval_hit_rate.py vector_top5
+python scripts/retrieval_hit_rate.py vector_rerank
+python scripts/retrieval_hit_rate.py hybrid_rerank --w-vector 0.5 --w-bm25 0.5
+python scripts/retrieval_hit_rate.py my_label --mode hybrid_rerank --eval-file eval/eval_keyword_set.json
+```
 
 ---
 
-## Why I Built This
+## Known limitations
 
-Insurance policy documents are one of the most important and most unread documents people sign. This project explores whether RAG can make dense legal documents genuinely accessible to everyday users, while staying grounded in the actual document without hallucinating coverage that doesn't exist.
+- **Q5 "What are the sum insured options available?" fails in every retrieval
+  mode.** The chunk that lists all nine options (the Schedule of Benefits
+  header, "Table SCHEDULE OF BENEFITS gives Benefit for each Sum Insured
+  (INR): 5 lacs, …, 2 Crore.") is 15th in vector search, so it is not in the
+  plain top 5. With vector + rerank it reaches the cross-encoder, which scores
+  it 0.038 against a top-5 cutoff of about 0.28 (13th of 20). With hybrid +
+  rerank it does not survive fusion: BM25 ranks it 325th of 486 (the word
+  "options" does not appear in the policy, and "sum insured" appears in a
+  large share of all chunks), so it falls outside the 25 candidates passed to
+  the reranker.
+- **Q6 "What is the ICU charge limit?" fails in every reranked mode.** The
+  Schedule of Benefits chunk that holds the row "ICU/Operation Theatre
+  Charges: Actual" is 4th in the plain vector top 5 and is in both reranker
+  candidate pools, but the cross-encoder scores it 0.019 against about 0.07 at
+  the top-5 cutoff. Text chunks that mention ICU (the ICU definition, the
+  organ donor clause) score higher, so the row ends up 8th of 20 (vector +
+  rerank) and 10th of 25 (hybrid + rerank).
+- **The co-payment answer can omit its condition.** The policy applies the 10%
+  co-payment only to insured persons aged 61 or above at entry; an observed
+  answer stated the 10% without that condition, although the retrieved chunk
+  contained it.
+- **The hit rate is page-level and coarse.** A hit means some chunk from the
+  right page was retrieved, not that the answer is complete.
+- **"Show page" in the UI** works only for a PDF uploaded in the current
+  Streamlit session; otherwise the button is hidden.
+- **Some tables have no title** (no heading or paragraph directly above
+  them), so their chunks and headers read "Untitled table".
+- **Latency:** 7–11 s per query with reranking on a CPU-only machine
+  (measured on a loaded dev machine, not a benchmark).
+- **One document at a time:** uploading replaces the indexed document.
+- **Synchronous ingestion** and **no conversation memory**: each question is
+  answered on its own.
+
+---
+
+## What I tried
+
+- **Table-aware parsing.** The plain PyMuPDF text loader turned tables into
+  one cell per line, separating values from their column headers. Writing each
+  table row with its headers repeated, plus one header chunk per table, made
+  the room-rent table row the top result for the room-rent question in spot
+  checks. It did not fix the health check-up question (Q20) on its own: Q20
+  still missed until each table row was also prefixed with the table's title
+  (the paragraph above the table, "12. Health Checkup Assure: …"), because
+  the limits table itself never says "health check-up".
+- **Cross-encoder reranking.** On the main set, reranking the vector top 20
+  scored the same as the plain vector top 5 (14/17). It fixed some questions
+  and lost others: for Q6 it scores the Schedule of Benefits ICU row 0.019,
+  below the top-5 cutoff of about 0.07, so a row that plain vector search had
+  in its top 5 drops out.
+- **Hybrid search (BM25 + vector).** No measurable gain on the general set
+  (15/17 vs 14/17, one question). On the keyword set it rescued one question
+  (IONM), whose answer page was far outside the vector top 20 but near the
+  top for BM25.
+- **Weight sweep.** Four vector/BM25 weightings, including BM25-only, gave
+  identical hit rates on both sets; the default stays 0.5/0.5.
+- **Semantic chunking: skipped on purpose.** The main retrieval failures
+  traced to table structure (values separated from their headers), which
+  semantic chunking of running text does not address; table-aware parsing
+  targets that directly. The plain-text chunks were not where the failures
+  came from; in the current index they average 442 characters (median 464)
+  against the 500-character limit.
+
+---
 
 ## Author
-S.Sreeja
+
+S. Sreeja
