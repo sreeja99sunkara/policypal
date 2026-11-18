@@ -38,7 +38,8 @@ def forwarded_for() -> dict:
         ip = xff or getattr(st.context, "ip_address", None)
     except Exception:
         ip = None
-    return {"X-Forwarded-For": ip} if ip else {}
+    # only a real string: anything else (e.g. a test mock) would make requests fail
+    return {"X-Forwarded-For": ip} if isinstance(ip, str) and ip.strip() else {}
 
 
 @st.cache_data(show_spinner=False)
