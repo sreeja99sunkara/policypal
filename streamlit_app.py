@@ -16,11 +16,38 @@ def api_error(resp: requests.Response) -> str:
         return resp.text
 
 
-def backend_is_up() -> bool:
+def backend_health() -> dict | None:
+    """The API's /health payload, or None if it is not reachable."""
     try:
-        return requests.get(f"{API_URL}/health", timeout=3).status_code == 200
-    except requests.RequestException:
-        return False
+        resp = requests.get(f"{API_URL}/health", timeout=3)
+        return resp.json() if resp.status_code == 200 else None
+    except (requests.RequestException, ValueError):
+        return None
+
+
+def env_flag(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def forwarded_for() -> dict:
+    """X-Forwarded-For for the API's per-IP rate limit. The API only ever sees
+    this app as its client, so pass on the browser's address: the header the
+    host's proxy set if there is one, else the address Streamlit saw."""
+    try:
+        xff = st.context.headers.get("X-Forwarded-For")
+        ip = xff or getattr(st.context, "ip_address", None)
+    except Exception:
+        ip = None
+    return {"X-Forwarded-For": ip} if ip else {}
+
+
+@st.cache_data(show_spinner=False)
+def read_pdf(path: str) -> bytes | None:
+    try:
+        with open(path, "rb") as f:
+            return f.read()
+    except OSError:
+        return None
 
 
 @st.cache_data(show_spinner=False, max_entries=32)
@@ -95,14 +122,31 @@ if "active_doc" not in st.session_state:
 with st.sidebar:
     st.header("Policy document")
 
-    if backend_is_up():
+    health = backend_health()
+    # The API decides; DEMO_MODE here only matters while the API is unreachable.
+    demo = bool(health.get("demo_mode")) if health else env_flag("DEMO_MODE")
+    if health:
         st.success("Backend connected")
+    elif demo:
+        st.warning("The backend is starting (loading models and indexing the policy). "
+                   "Refresh in a minute.")
     else:
         st.error(f"Backend not reachable at {API_URL}")
 
-    uploaded = st.file_uploader("Upload a policy PDF", type=["pdf"])
+    uploaded = None
+    if demo:
+        policy_name = os.getenv("DEMO_POLICY_NAME", "Star Health Assure Insurance Policy (policy wording)")
+        st.info(f"This demo answers questions about one fixed policy: {policy_name}. "
+                "Uploads are disabled.")
+        demo_pdf = os.getenv("DEFAULT_POLICY_PDF", "")
+        if demo_pdf and "pdf_bytes" not in st.session_state:
+            pdf = read_pdf(demo_pdf)  # same container: lets "Show page" render pages
+            if pdf:
+                st.session_state.pdf_bytes = pdf
+    else:
+        uploaded = st.file_uploader("Upload a policy PDF", type=["pdf"])
 
-    if st.button("Index document", disabled=uploaded is None, use_container_width=True):
+    if not demo and st.button("Index document", disabled=uploaded is None, use_container_width=True):
         with st.spinner("Reading, chunking and embedding. This can take a minute..."):
             try:
                 resp = requests.post(
@@ -127,8 +171,8 @@ with st.sidebar:
 
     st.divider()
     st.caption(
-        "Uploading replaces the previously indexed document. "
-        "Page numbers in answers and sources are the PDF viewer's page numbers "
+        ("" if demo else "Uploading replaces the previously indexed document. ")
+        + "Page numbers in answers and sources are the PDF viewer's page numbers "
         "(the first page is Page 1)."
     )
     if st.button("Clear chat", use_container_width=True):
@@ -157,6 +201,7 @@ if question:
                 resp = requests.post(
                     f"{API_URL}/api/query",
                     json={"question": question},
+                    headers=forwarded_for(),
                     timeout=60,
                 )
                 if resp.status_code == 200:

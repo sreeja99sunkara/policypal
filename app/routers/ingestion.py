@@ -5,6 +5,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 
 from app.services.document_loader import load_and_chunk
 from app.services.vectorstore import ingest_documents
+from app.core import settings
 from app.core.logger import get_logger, log_with_fields
 
 router = APIRouter()
@@ -12,10 +13,17 @@ logger = get_logger(__name__)
 
 MAX_FILE_SIZE = 20 * 1024 * 1024
 RAW_DATA_DIR = "data/raw"
+DEMO_UPLOAD_MESSAGE = (
+    "Uploads are disabled in this demo. It answers questions about one fixed "
+    "policy document; run PolicyPal yourself to index your own PDF."
+)
 
 
 @router.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
+    if settings.demo_mode():
+        raise HTTPException(status_code=403, detail=DEMO_UPLOAD_MESSAGE)
+
     log_with_fields(logger, "info", "Upload received", filename=file.filename)
 
     if not file.filename.endswith(".pdf"):

@@ -1,8 +1,42 @@
+import os
+
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
 load_dotenv()
+
+
+def ingest_default_policy() -> None:
+    """Index DEFAULT_POLICY_PDF on startup if the vector store is empty.
+
+    Used by the public demo, which serves one fixed policy: a fresh container
+    (or a host without a persistent disk) indexes it once at boot; an existing
+    index is left alone.
+    """
+    import time
+    from app.core import settings
+    from app.core.logger import get_logger, log_with_fields
+    from app.services.vectorstore import has_documents, ingest_documents
+    from app.services.document_loader import load_and_chunk
+
+    logger = get_logger("app.startup")
+    path = settings.default_policy_pdf()
+    if not path:
+        return
+    if has_documents():
+        log_with_fields(logger, "info", "Default policy skipped: index already populated", pdf=path)
+        return
+    if not os.path.isfile(path):
+        log_with_fields(logger, "warning", "DEFAULT_POLICY_PDF not found; index stays empty", pdf=path)
+        return
+    start = time.time()
+    chunks = load_and_chunk(path)
+    ingest_documents(chunks)
+    log_with_fields(
+        logger, "info", "Default policy indexed",
+        pdf=path, chunk_count=len(chunks), seconds=round(time.time() - start, 1),
+    )
 
 
 @asynccontextmanager
@@ -20,6 +54,7 @@ async def lifespan(app: FastAPI):
     # predict, so the first user query does not pay for the download or warm-up.
     get_reranker().predict([("warm-up query", "warm-up passage")])
     get_vectorstore()
+    ingest_default_policy()  # DEFAULT_POLICY_PDF, only when the store is empty
     build_bm25()  # keyword index for hybrid search; rebuilt lazily after each ingestion
     get_rag_chain()
     print("All services ready.")
@@ -42,4 +77,5 @@ app.include_router(ingestion.router, prefix="/api")
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    from app.core import settings
+    return {"status": "ok", "demo_mode": settings.demo_mode()}
