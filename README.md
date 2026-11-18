@@ -21,6 +21,18 @@ Policy wording (20 pages).
 
 ---
 
+## Live demo
+
+**<SPACE_URL>** (Hugging Face Space; placeholder until it is deployed).
+
+The demo answers questions about the Star Health policy only; uploads are
+disabled. It has per-visitor rate limits, a daily question cap, and answers
+one question at a time. After a period of inactivity it sleeps, and the first
+visit then waits about two minutes while it starts. See
+[docs/deploy_hf_space.md](docs/deploy_hf_space.md) for how it is deployed.
+
+---
+
 ## Architecture
 
 ```mermaid
@@ -222,10 +234,15 @@ volume. The cost is about 60 s of indexing on each start with an empty index.
 | Two-container setup, API container, during a query | 1.09 GiB (sampled peak) |
 | `demo` container, idle after indexing the policy | 1.06–1.17 GiB |
 | `demo` container under a hard 2 GB cap, cold start + one query | peak 1407 MiB, no OOM events |
+| Hugging Face bundle image (models baked in), idle | 1.04–1.14 GiB |
+| Hugging Face bundle image, during two queries (sampled) | 1.38 GiB; cgroup peak 1504 MiB |
+| Hugging Face bundle image under a hard 2 GB cap, cold start + one query | cgroup peak 1869 MiB, limit never hit, no OOM |
 
-Plan for **2 GB of RAM**. 1 GB is too small, since the idle process alone is
-about 1.1 GB. Concurrent queries add to the peak; only one query at a time was
-measured.
+Plan for **2 GB of RAM** at minimum. 1 GB is too small, since the idle process
+alone is about 1.1 GB. In one 2 GB run the peak reached 1869 MiB, which leaves
+little headroom, so 3–4 GB is safer if the host offers it. The peak counter
+includes reclaimable file cache. Only one query at a time was measured;
+`MAX_CONCURRENT_QUERIES=1` keeps it that way.
 
 Other measurements:
 - **Image size:** the `demo` image is 3.0 GB.
@@ -259,8 +276,13 @@ either the per-IP limits or the daily cap.
   image runs as uid 1000, so check write access. Railway documents a
   `RAILWAY_RUN_UID=0` variable for this case, which runs as root. Memory is
   billed by usage, so expect about 1.1–1.4 GB.
-- **Hugging Face Spaces (unverified).** Create a Docker Space and push this
-  repo to it. The Space's README needs the YAML header `sdk: docker` and
+- **Hugging Face Spaces.** The bundle was built and run locally as the Space
+  would run it; deploying to Hugging Face itself is unverified.
+  `python scripts/make_space_bundle.py` builds `dist/hf-space/`, which is what
+  gets pushed. That bundle has a README with the Space's YAML header, a
+  Dockerfile that bakes in the models, and only the allow-listed files. The
+  step-by-step guide is [docs/deploy_hf_space.md](docs/deploy_hf_space.md).
+  General notes: create a Docker Space and push the bundle to it. The Space's README needs the YAML header `sdk: docker` and
   `app_port: 7860`. Spaces run containers as uid 1000, which this image
   already uses. Add `GROQ_API_KEY` as a Space secret. The free CPU hardware has
   more than 2 GB of RAM. Without paid persistent storage, the policy is
@@ -520,6 +542,14 @@ python scripts/retrieval_hit_rate.py my_label --mode hybrid_rerank --eval-file e
   the top-5 cutoff. Text chunks that mention ICU (the ICU definition, the
   organ donor clause) score higher, so the row ends up 8th of 20 (vector +
   rerank) and 10th of 25 (hybrid + rerank).
+- **"What is the waiting period for cataract surgery?" is refused.** The
+  specified-disease clause ("Code Excl 02 … excluded until the expiry of 24
+  months") and the list that names cataract ("F. List of specific
+  diseases/procedures 1. Treatment of Cataract") sit in different chunks on the
+  same page. Only the list was retrieved, so the 24-month figure was not in the
+  context and the model correctly refused. The page-level hit rate counts this
+  question as a hit (from `eval/refusal_count_after_pipeline.json`, based on
+  recomputed contexts).
 - **The co-payment answer can omit its condition.** The policy applies the 10%
   co-payment only to insured persons aged 61 or above at entry; an observed
   answer stated the 10% without that condition, although the retrieved chunk
@@ -527,7 +557,8 @@ python scripts/retrieval_hit_rate.py my_label --mode hybrid_rerank --eval-file e
 - **The hit rate is page-level and coarse.** A hit means some chunk from the
   right page was retrieved, not that the answer is complete.
 - **"Show page" in the UI** works only for a PDF uploaded in the current
-  Streamlit session; otherwise the button is hidden.
+  Streamlit session, or in demo mode for the fixed policy
+  (`DEFAULT_POLICY_PDF`); otherwise the button is hidden.
 - **Some tables have no title** (no heading or paragraph directly above
   them), so their chunks and headers read "Untitled table".
 - **Latency:** 7–11 s per query with reranking on a CPU-only machine
