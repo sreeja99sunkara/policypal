@@ -149,6 +149,17 @@ def test_prompt_context_byte_identical_sample_docs():
     assert out["sources"] == build_sources(SAMPLE_DOCS)
 
 
+def test_chain_exposes_docs_matching_prompt_context():
+    """run_ragas scores context_strings(out["docs"]); they must be exactly the
+    blocks of the prompt context, in prompt order."""
+    from app.services.rag_chain import context_strings
+    llm = RecordingLLM("ok")
+    out = build_chain(RunnableLambda(lambda q: SAMPLE_DOCS), llm.runnable).invoke("q")
+    assert out["docs"] == SAMPLE_DOCS
+    assert "\n\n".join(context_strings(out["docs"])) == legacy_format_docs(SAMPLE_DOCS)
+    assert legacy_format_docs(SAMPLE_DOCS) in llm.calls[0][-1].content
+
+
 def test_prompt_context_byte_identical_real_retrieval():
     """One real retrieval against the local index (LLM still mocked)."""
     from app.services.vectorstore import has_documents

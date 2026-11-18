@@ -23,10 +23,14 @@ def format_docs(docs: List[Document]) -> str:
         chunk_count=len(docs),
         pages=[doc.metadata.get("page") for doc in docs]
     )
-    return "\n\n".join(
-        f"[Page {doc.metadata['page']}]\n{doc.page_content}"
-        for doc in docs
-    )
+    return "\n\n".join(context_strings(docs))
+
+
+def context_strings(docs: List[Document]) -> List[str]:
+    """The per-chunk blocks of the prompt context, in the order the LLM sees them
+    ("[Page N]\\n<content>", 0-indexed page). format_docs joins these with blank
+    lines; evaluation scores exactly these strings."""
+    return [f"[Page {doc.metadata['page']}]\n{doc.page_content}" for doc in docs]
 
 MAX_CONTEXT_CHUNKS = 6
 
@@ -80,15 +84,17 @@ def get_rag_chain():
     global _chain
     if _chain is not None:
         return _chain
-    GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
-    # Initialize components
-    llm = ChatGroq(
-        model=GROQ_MODEL,
+    _chain = build_chain(RunnableLambda(retrieve_and_rerank), make_llm())
+    return _chain
+
+
+def make_llm() -> ChatGroq:
+    """The answering LLM (GROQ_MODEL, temperature 0). Constructing it makes no call."""
+    return ChatGroq(
+        model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
         temperature=0,
         api_key=os.getenv("GROQ_API_KEY")
     )
-    _chain = build_chain(RunnableLambda(retrieve_and_rerank), llm)
-    return _chain
 
 
 def build_chain(retriever, llm):
@@ -97,7 +103,9 @@ def build_chain(retriever, llm):
     The prompt "context" is format_docs(docs) (0-indexed "[Page N]" labels),
     unchanged, so generation is unaffected. "sources" is a list of structured
     source dicts (1-indexed viewer pages) built from the same docs; the /query
-    route converts the answer's citations to viewer pages.
+    route converts the answer's citations to viewer pages. "docs" is the
+    retrieved Documents themselves, so evaluation can score exactly what the
+    model saw without a second retrieval (the API ignores it).
     """
     prompt = get_qa_prompt()
     parser = StrOutputParser()
@@ -107,5 +115,6 @@ def build_chain(retriever, llm):
         | RunnableParallel(
             answer=prompt | llm | parser,
             sources=lambda x: build_sources(x["docs"]),
+            docs=lambda x: x["docs"],
         )
     )
