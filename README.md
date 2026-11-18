@@ -171,6 +171,97 @@ docker compose down       # keeps the volumes; `down -v` deletes the index and m
   hosts, GPU use (the images are CPU-only), and the UI in a browser (only its
   health endpoint was checked).
 
+### Deploying a demo
+
+The `demo` target is one container for a public demo: uvicorn on
+`127.0.0.1:8000` (not exposed) and Streamlit on `$PORT` (default 7860), which
+calls the API on localhost. It runs as a non-root user (uid 1000) and indexes
+one fixed policy, the Star Health policy wording copied into the image, on
+startup. `demo` is the last stage in the Dockerfile, so a platform that builds
+the Dockerfile without naming a target gets it.
+
+```bash
+docker build --target demo -t policypal-demo .
+docker run -p 7860:7860 -e GROQ_API_KEY=... policypal-demo    # or --env-file .env
+# open http://localhost:7860
+```
+
+Environment variables (secrets come only from the environment; the image has
+no `.env`):
+
+| Variable | Default in `demo` | Notes |
+|---|---|---|
+| `GROQ_API_KEY` | none | **Required.** Set it as a secret on the host. |
+| `GROQ_MODEL` | `openai/gpt-oss-120b` | Answering model. |
+| `DEMO_MODE` | `true` (`false` elsewhere) | Uploads return 403 and the UI hides the uploader. |
+| `DEFAULT_POLICY_PDF` | `/app/demo/policy.pdf` | Indexed on startup **only if the index is empty**. |
+| `RATE_LIMIT_PER_MINUTE` | `10` | Per client IP, rolling window; `0` disables. |
+| `RATE_LIMIT_PER_DAY` | `100` | Per client IP, rolling 24 h; `0` disables. |
+| `MAX_QUESTION_CHARS` | `500` | Longer questions get a 422. |
+| `PORT` | `7860` | Streamlit's port; most hosts set this themselves. |
+| `API_PORT` | `8000` | Internal API port. |
+| `DEMO_POLICY_NAME` | Star Health policy | Name shown in the UI's demo note. |
+
+Build arg: `PRELOAD_MODELS=true` bakes both models (about 1.2 GB) into the
+image, so a host without a persistent disk does not download them on every
+cold start.
+
+**Indexing at startup, not at build time.** The index is built by the running
+app (the same embedding code path as an upload), which keeps the build free of
+model downloads and keeps the image working with or without a mounted index
+volume. The cost is about 60 s of indexing on each start with an empty index.
+
+**Memory (measured locally, Docker Desktop, CPU only).**
+
+| | Memory |
+|---|---|
+| Two-container setup, API container, idle | 919 MiB |
+| Two-container setup, API container, during a query | 1.09 GiB (sampled peak) |
+| `demo` container, idle after indexing the policy | 1.06–1.17 GiB |
+| `demo` container under a hard 2 GB cap, cold start + one query | peak 1407 MiB, no OOM events |
+
+Plan for **2 GB of RAM**. 1 GB is too small, since the idle process alone is
+about 1.1 GB. Concurrent queries add to the peak; only one query at a time was
+measured.
+
+Other measurements:
+- **Image size:** the `demo` image is 3.0 GB.
+- **Startup:** 109–130 s to a healthy API with the models already cached,
+  including 59–65 s of indexing (486 chunks).
+- **Queries:** 9–17 s each.
+
+**Rate limiting** is in memory, per process. It is reset by a restart and not
+shared between replicas, so run a single instance. The client IP is the
+right-most `X-Forwarded-For` entry: the left-most entries are set by the client
+and could be forged to get around the limit. Behind more than one proxy hop the
+right-most entry may be a proxy address, so all users would share one bucket;
+check this on your host. The limiter does not cap total Groq usage, so also set
+a spending limit on the Groq account.
+
+**Platform notes. None of these were tried; all are unverified.**
+
+- **Render (unverified).** Create a Docker web service from the repo. Without
+  a target setting, the last stage (`demo`) is built. Add `GROQ_API_KEY` as a
+  secret environment variable. Render sets `PORT`, which the start script
+  uses. The free instance type has less than 2 GB of RAM, so pick a paid type
+  with at least 2 GB. Without a persistent disk, every deploy or restart
+  re-indexes the policy (about a minute) and downloads the models unless they
+  are baked in with `PRELOAD_MODELS=true`.
+- **Railway (unverified).** Railway builds a root `Dockerfile` automatically
+  (last stage, `demo`) and sets `PORT`. Add `GROQ_API_KEY` under Variables.
+  Volumes could hold the index (`/app/data/processed/chroma`) and the models
+  (`/models/huggingface`). Railway volumes may be mounted as root, and this
+  image runs as uid 1000, so check write access. Railway documents a
+  `RAILWAY_RUN_UID=0` variable for this case, which runs as root. Memory is
+  billed by usage, so expect about 1.1–1.4 GB.
+- **Hugging Face Spaces (unverified).** Create a Docker Space and push this
+  repo to it. The Space's README needs the YAML header `sdk: docker` and
+  `app_port: 7860`. Spaces run containers as uid 1000, which this image
+  already uses. Add `GROQ_API_KEY` as a Space secret. The free CPU hardware has
+  more than 2 GB of RAM. Without paid persistent storage, the policy is
+  re-indexed after each restart or wake from sleep. Check whether the
+  `X-Forwarded-For` behaviour above gives per-user rate limits there.
+
 ---
 
 ## API
@@ -223,9 +314,19 @@ Response (abridged; `text` holds the full chunk):
   `table`; `title` is the table's title when known.
 - `cited_pages`: sorted viewer pages cited in the answer (empty if none).
 
+Errors return `{"detail": "..."}`:
+- **422:** the question is longer than `MAX_QUESTION_CHARS` (default 500).
+- **429:** the per-IP rate limit was reached; a `Retry-After` header is set
+  (see [Deploying a demo](#deploying-a-demo)).
+- **400:** the question is empty.
+- **404:** no document is indexed.
+
+`POST /api/upload` returns 403 when `DEMO_MODE` is on.
+
 ### `GET /health`
 
-Returns `{"status": "ok"}`.
+Returns `{"status": "ok", "demo_mode": false}`. The UI reads `demo_mode` to
+decide whether to show the uploader.
 
 ---
 
@@ -249,7 +350,10 @@ policypal/
 │   │   ├── reranker.py         # bge-reranker-base cross-encoder
 │   │   ├── rag_chain.py        # retrieval, header attachment, LCEL chain
 │   │   └── citations.py        # structured sources, page-citation rewriting
-│   └── core/logger.py          # structured JSON logging
+│   │   └── rate_limit.py       # in-memory per-IP limiter for POST /api/query
+│   └── core/
+│       ├── logger.py           # structured JSON logging
+│       └── settings.py         # DEMO_MODE, rate limits, question length (env)
 ├── streamlit_app.py            # chat UI with per-chunk sources
 ├── scripts/
 │   ├── reindex.py              # re-index a PDF through the upload path
@@ -261,7 +365,8 @@ policypal/
 │   ├── eval_keyword_set.json   # 6 keyword-style questions (not yet human-verified)
 │   ├── hit_rate_*.json         # retrieval hit-rate results
 │   └── archive/                # frozen RAGAS baseline (see its README)
-├── tests/test_citations.py
+├── tests/                      # test_citations.py, test_limits.py
+├── docker/                     # slim requirement lists, start-demo.sh
 ├── notebooks/                  # early exploration
 ├── data/raw/                   # uploaded PDFs
 └── data/processed/chroma/      # vector store (not committed)
@@ -280,6 +385,9 @@ The tests mock the LLM (no Groq calls). They check the structured sources
 `(Pages 4-5)`, `(Page 4, 5)` and similar), and that the prompt the LLM receives
 is byte-identical to the original format. One test runs a real retrieval
 against the local index and is skipped if no document is indexed.
+`tests/test_limits.py` covers the rate limiter (fake clock), the
+`X-Forwarded-For` handling, the 422 and 429 responses, and the demo-mode 403
+on upload, using a stub chain.
 
 ---
 
