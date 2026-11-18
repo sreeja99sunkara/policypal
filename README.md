@@ -153,16 +153,17 @@ docker compose down       # keeps the volumes; `down -v` deletes the index and m
 - Two named volumes: `chroma` (the index, survives restarts and `down`) and
   `hf-cache` (Hugging Face models, `HF_HOME`). The images contain no data and
   no index; upload a PDF after the first start.
-- First start: the embedding model is downloaded into `hf-cache` before the
-  API reports healthy, and the reranker (about 1.1 GB) is downloaded during
-  the first query. That first query can take many minutes on a slow
-  connection, longer than the UI's 60-second request timeout, so send it with
-  curl (or build with `PRELOAD_MODELS=true`, which bakes both models into the
-  image: `docker compose build --build-arg PRELOAD_MODELS=true api`).
+- First start: the API loads both models before it reports healthy, so on an
+  empty `hf-cache` volume it first downloads the embedding model and the
+  reranker (about 1.2 GB together). The health check allows up to 20 minutes
+  for this, and the UI starts only once the API is healthy. Later starts reuse
+  the volume. To skip the download at run time, build with the models baked
+  into the image: `docker compose build --build-arg PRELOAD_MODELS=true api`.
 - Measured on the development machine (Docker Desktop, CPU only, slow
   network): build about 21 minutes; API image 2.5 GB, UI image 894 MB;
-  upload of the 20-page policy 36 s (486 chunks); first query 21 minutes
-  (reranker download), later queries 5–11 s.
+  upload of the 20-page policy 36 s (486 chunks); queries 5–11 s once the
+  models are cached. (Before the reranker was loaded at startup, the first
+  query took 21 minutes because it downloaded the reranker.)
 - The API runs uvicorn without `--reload` as a non-root user. Uploaded PDFs
   are written inside the container (`/app/data/raw`) and are not kept when
   the container is recreated; the index is.
@@ -233,7 +234,7 @@ Returns `{"status": "ok"}`.
 ```
 policypal/
 ├── app/
-│   ├── main.py                 # FastAPI app; lifespan warms models and builds BM25
+│   ├── main.py                 # FastAPI app; lifespan loads embeddings + reranker, builds BM25
 │   ├── routers/
 │   │   ├── ingestion.py        # POST /api/upload
 │   │   └── query.py            # POST /api/query (rewrites citations to viewer pages)

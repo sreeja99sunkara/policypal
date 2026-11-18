@@ -17,7 +17,9 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 300s
+      # The API loads both models before it answers /health; on a fresh hf-cache
+      # volume that includes downloading ~1.2 GB, so allow a long first start.
+      start_period: 20m
     restart: unless-stopped
 
   ui:

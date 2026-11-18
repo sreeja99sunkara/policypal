@@ -14,7 +14,11 @@ async def lifespan(app: FastAPI):
     from app.services.vectorstore import get_vectorstore
     from app.services.rag_chain import get_rag_chain
     from app.services.hybrid import build_bm25
+    from app.services.reranker import get_reranker
     get_embeddings()
+    # Load the cross-encoder now (downloads it on a fresh model cache) and run one
+    # predict, so the first user query does not pay for the download or warm-up.
+    get_reranker().predict([("warm-up query", "warm-up passage")])
     get_vectorstore()
     build_bm25()  # keyword index for hybrid search; rebuilt lazily after each ingestion
     get_rag_chain()
