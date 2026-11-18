@@ -1,0 +1,658 @@
+[
+  {
+    "id": 1,
+    "question": "What is the waiting period for pre-existing diseases?",
+    "ground_truth": "The waiting period for pre-existing diseases depends on the policy term: 36 months for 1-year and 2-year policy terms, and 30 months for a 3-year policy term.",
+    "answerable": true,
+    "response": "- For a **1‑year or 2‑year policy term**, coverage for any pre‑existing disease begins only after **36 months of continuous coverage** (provided the disease was declared at application and accepted by the insurer) (Page 10).  \n\n- For a **3‑year policy term**, coverage for any pre‑existing disease begins only after **30 months of continuous coverage** (provided the disease was declared at application and accepted by the insurer) (Page 10; Page 10 – Standard Exclusions, Code Excl 01).",
+    "contexts": [
+      "[Page 10]\nthe time of application and accepted by Insurer.\nApplicable for 1 year and 2 year policy term: Coverage under the policy after \nthe expiry of 36 months for any pre-existing disease is subject to the same being \ndeclared at the time of application and accepted by Insurer.\n2. \nSpeciﬁed disease/procedure waiting period - Code Excl 02\nA. Expenses related to the treatment of the listed Conditions, surgeries/treatments \nshall be excluded until the expiry of 24 months of continuous coverage after the",
+      "[Page 10]\nextent of sum insured increase.\nC. If the Insured Person is continuously covered without any break as deﬁned under \nthe portability norms of the extant IRDAI (Health Insurance) Regulations, then \nwaiting period for the same would be reduced to the extent of prior coverage.\nD. Applicable for 3 year policy term: Coverage under the policy after the expiry of \n30 months for any pre-existing disease is subject to the same being declared at \nthe time of application and accepted by Insurer.",
+      "[Page 4]\nadvice of a Medical Practitioner. The Insured is not admitted as a day care or in-patient.\nPre-Existing Disease: Pre-existing Disease means any condition, ailment, injury or \ndisease:\na) \nThat is/are diagnosed by a physician within 48 months prior to the effective date of the \npolicy issued by the insurer or its reinstatement\nor\nb) \nFor which medical advice or treatment was recommended by, or received from, a",
+      "[Page 3]\nperson's health.\nGrace Period: Grace period means the speciﬁed period of time immediately following the \npremium due date during which a payment can be made to renew or continue a policy in \nforce without loss of continuity beneﬁts such as waiting periods and coverage of \npre-existing diseases. Coverage is not available for the period for which no premium is \nreceived.\nHospital: A hospital means any institution established for in-patient care and day care",
+      "[Page 10]\nThe Company shall not be liable to make any payments under this policy in respect of any \nexpenses what so ever incurred by the insured person in connection with or in respect of;\nSTANDARD EXCLUSIONS\n1. \nPre-Existing Diseases - Code Excl 01\nA. Applicable for 3 year policy term: Expenses related to the treatment of a \npre-existing Disease (PED) and its direct complications shall be excluded until \nthe expiry of 30 months of continuous coverage after the date of inception of the"
+    ],
+    "latency_s": 31.17,
+    "context_pages": [
+      10,
+      10,
+      4,
+      3,
+      10
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 2,
+    "question": "What is the room rent limit per day?",
+    "ground_truth": "It depends on the sum insured. For a sum insured of Rs 5 lakh the limit is up to 1% of the sum insured per day (Rs 5,000 per day). For Rs 10 lakh, 15 lakh, 20 lakh and 25 lakh it is any room except Suite or a higher category. For Rs 50 lakh, 75 lakh, 1 crore and 2 crore it is any room with no room category restriction.",
+    "answerable": true,
+    "source": "Pages 6, 19 (room rent criteria table; Schedule of Benefits row 1)",
+    "response": "The policy sets the daily room‑rent limit as follows:\n\n- **If the Sum Insured is ₹5 lakh:** the limit is **up to 1 % of the Sum Insured per day**.  \n- **If the Sum Insured is ₹10 lakh, ₹15 lakh, ₹20 lakh or ₹25 lakh:** any room (except suite or a higher category) is covered, with no specific monetary cap stated per day.  \n- **If the Sum Insured is ₹50 lakh, ₹75 lakh, ₹100 lakh or ₹200 lakh:** any room is covered, with no specific monetary cap stated per day.  \n\nThese limits are taken from the “Room, Boarding, Nursing Expenses” table on **Page 5** of the policy document.  \n\nThe policy does not provide a single fixed monetary amount per day for all Sum Insured levels; the limit varies as described above.",
+    "contexts": [
+      "[Page 5]\nTable 1. Room, Boarding, Nursing Expenses all inclusive as provided by the Hospital / Nursing Home as per the limits given below:- gives Benefit for each Sum Insured in lakhs (Rs.): 5, 10/15/20/25, 50/75/100/200.",
+      "[Page 5]\n[1. Room, Boarding, Nursing Expenses all inclusive as provided by the Hospital / Nursing Home as per the limits given below:-] Benefit: Room Rent Criteria | Sum Insured in lakhs (Rs.) -> 5: Up to 1% of Sum Insured per day; 10/15/20/25: Any Room (Except suite or above category); 50/75/100/200: Any room",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: T Shared accommodation - If the Insured person occupies, a shared accommodation during in-patient hospitalization, then amount of Rs.1,000/- per day will be payable | Refer to Policy Clause Number: B(22)",
+      "[Page 4]\non mutual consent with a provision of grace period for treating the renewal continuous for \nthe purpose of gaining credit for pre-existing diseases, time-bound exclusions and for all \nwaiting periods.\nRoom Rent: Room Rent means the amount charged by a Hospital towards Room and \nBoarding expenses and shall include the associated medical expenses.\nSurgery or Surgical Procedure: Surgery or Surgical Procedure means manual and / or",
+      "[Page 6]\nduring in-patient hospitalization, then amount of Rs.1,000/- per day will be payable for \neach continuous and completed period of 24 hours of stay in such shared \naccommodation.\nNote\ni) \nThis beneﬁt is payable only if there is an admissible claim for hospitalization  \nunder the policy\nSum Insured in Lakhs (Rs.)\nLimit Per Policy \nPeriod (Rs.)\n5,00,000/-, 10,00,000/-, 15,00,000/-, 20,00,000/-, 25,00,000/-\n2,00,000\n50,00,000/-, 75,00,000/-, 1,00,00,000/-, 2,00,00,000/-\n4,00,000",
+      "[Page 19]\n[SCHEDULE OF BENEFITS] S.No: 21 | Benefit: Shared accommodation | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: Rs.1,000/- per day\n[SCHEDULE OF BENEFITS] S.No: 22 | Benefit: AYUSH Treatment | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: Actuals"
+    ],
+    "latency_s": 17.93,
+    "context_pages": [
+      5,
+      5,
+      0,
+      4,
+      6,
+      19
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 3,
+    "question": "Is maternity covered? What is the sub-limit?",
+    "ground_truth": "Yes. Maternity (delivery expenses) is covered, including normal delivery, caesarean section, and pre-natal and post-natal expenses. The sub-limit is up to 10% of the sum insured for each delivery.",
+    "answerable": true,
+    "response": "Maternity is covered under the policy, subject to **Code Excl 18** (except to the extent covered under Coverage 14) and the specific conditions listed (e.g., medical treatment expenses traceable to childbirth, including complicated deliveries and caesarean sections, but excluding ectopic pregnancy) (Page 11).\n\nThe policy document does **not** specify any sub‑limit for maternity coverage.",
+    "contexts": [
+      "[Page 6]\nSpecial Conditions applicable for this section\n1. \nThis cover is available only If Delivery Expenses Claim is paid under this policy or \nif Mother is covered under this policy for a continuous period of 12 months \nwithout break\n2. \nIntimation about the birth of the New Born should be given to the company and \nthe coverage will be given to the New Born from the ﬁrst day of its birth.\n3. \nExclusion no.1 (Code-Excl 01), Exclusion no.2 (Code-Excl 02), Exclusion no.3",
+      "[Page 11]\nAssisted Reproduction services including artiﬁcial insemination and advanced \nreproductive technologies such as IVF, ZIFT, GIFT,ICSI\nc. \nGestational Surrogacy\nd. \nReversal of sterilization\n18. Maternity - Code Excl 18 (except to the extent covered under Coverage 14)\ni. \nMedical treatment expenses traceable to childbirth (including complicated \ndeliveries and caesarean sections incurred during hospitalization) except \nectopic pregnancy;\nii.",
+      "[Page 6]\nExclusion no.1 (Code-Excl 01), Exclusion no.2 (Code-Excl 02), Exclusion no.3 \n(Code-Excl 03) and Exclusion no.20 (Code-Excl 20) as stated under this policy \nshall not apply for the New Born baby cover.\n4. \nIn the subsequent years, the New Born Baby will be covered up to the Sum \nInsured (without any underwriting and the entry age criteria), if the policy holder \nopts the coverage for New Born and pays the premium.\n5. \nEnhancement of sum insured is subject to underwriters approval",
+      "[Page 11]\nectopic pregnancy;\nii. \nExpenses towards miscarriage (unless due to an accident) and lawful medical \ntermination of pregnancy during the policy period\nSpeciﬁc Exclusions\n19. Circumcision (unless necessary for treatment of a disease not excluded under this \npolicy or necessitated due to an accident), Preputioplasty, Frenuloplasty, Preputial \nDilatation and Removal of SMEGMA -Code Excl 19\n20. Congenital External Condition / Defects / Anomalies(except to the extent covered",
+      "[Page 11]\nNew Born Baby Cover: This cover is available only If Delivery Expenses Claim \nis paid under this policy or if Mother is covered under this policy for a continuous \nperiod of 12 months without break\n3. \n30-day waiting period - Code Excl 03\nA. Expenses related to the treatment of any illness within 30 days from the ﬁrst \npolicy commencement date shall be excluded except claims arising due to an \naccident, provided the same are covered"
+    ],
+    "latency_s": 14.93,
+    "context_pages": [
+      6,
+      11,
+      6,
+      11,
+      11
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 4,
+    "question": "What are the exclusions?",
+    "ground_truth": "The main exclusions include pre-existing diseases, specified diseases and procedures excluded for the first 24 months unless caused by an accident (for example cataract, ENT diseases, thyroid disorders, hernia, gallstones, kidney stones, joint replacement, spinal disorders, gynaecological conditions, prostate diseases, haemorrhoids), the 30-day waiting period, hospital admission primarily for investigation or evaluation, rest cure, rehabilitation and respite care, obesity or weight-control treatment, cosmetic or plastic surgery unless medically necessary due to accident, burns or illness, hazardous or adventure sports injuries, breach of law, treatment outside India, war or nuclear risks, unproven treatments, and certain non-medical expenses.",
+    "answerable": true,
+    "response": "**Major exclusions listed in the policy (Page 1)**  \n\n1. **Any hospital admission primarily for investigation diagnostic purpose** – Clause C(4) (Page 1)  \n2. **Pregnancy, infertility** – Clause C(17) and C(18) (Page 1)  \n3. **Treatment outside India** – Clause D(23) (Page 1)  \n4. **Circumcision, sex change surgery, cosmetic surgery & plastic surgery** – Clause C(7), C(8) and C(19) (Page 1)  \n5. **Refractive error correction, hearing impairment correction, corrective & cosmetic dental surgeries** – Clause C(15) and C(30) (Page 1)  \n6. **Substance abuse, self‑inflicted injuries** – Clause C(12) and C(22) (Page 1)  \n7. **Hazardous sports, war, terrorism, civil war or breach of law** – Clause C(9), C(10) and C(23) (Page 1)  \n8. **Any hospitalization which are not medically necessary / does not warrant hospitalization** – Clause C(31) (Page 1)  \n\n**Additional specific exclusions (Page 11)**  \n\n- **Ectopic pregnancy** (Page 11)  \n- **Expenses towards miscarriage (unless due to an accident) and lawful medical termination of pregnancy during the policy period** (Page 11)  \n- **Circumcision (unless necessary for treatment of a disease not excluded under this policy or necessitated due to an accident), Preputioplasty, Frenuloplasty, Preputial Dilatation and Removal of SMEGMA** – listed as “Code Excl 19” (Page 11)  \n- **Congenital External Condition / Defects / Anomalies (except to the extent covered …)** – listed as “Code Excl 20”; the description is incomplete in the provided text (Page 11)  \n\nThese are all the exclusions explicitly mentioned in the provided policy document.",
+    "contexts": [
+      "[Page 11]\nectopic pregnancy;\nii. \nExpenses towards miscarriage (unless due to an accident) and lawful medical \ntermination of pregnancy during the policy period\nSpeciﬁc Exclusions\n19. Circumcision (unless necessary for treatment of a disease not excluded under this \npolicy or necessitated due to an accident), Preputioplasty, Frenuloplasty, Preputial \nDilatation and Removal of SMEGMA -Code Excl 19\n20. Congenital External Condition / Defects / Anomalies(except to the extent covered",
+      "[Page 1]\nUntitled table gives Product Name for each column: Description, Refer to Policy Clause Number.",
+      "[Page 1]\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: VII. Hazardous sports, war, terrorism, civil war or breach of law | Refer to Policy Clause Number: C(9), C(10) and C(23)\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: VIII. Any hospitalization which are not medically necessary / does not warrant hospitalization | Refer to Policy Clause Number: C (31)",
+      "[Page 1]\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: III. Treatment outside India | Refer to Policy Clause Number: D(23)\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: IV. Circumcision, sex change surgery, cosmetic surgery & plastic surgery | Refer to Policy Clause Number: C(7), C(8) and C(19)",
+      "[Page 1]\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: I. Any hospital admission primarily for investigation diagnostic purpose | Refer to Policy Clause Number: C(4)\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: II. Pregnancy, infertility | Refer to Policy Clause Number: C(17) and C(18)",
+      "[Page 1]\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: V. Refractive error correction, hearing impairment correction, corrective & cosmetic dental surgeries | Refer to Policy Clause Number: C(15) and C(30)\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: VI. Substance abuse, self-inﬂicted injuries | Refer to Policy Clause Number: C(12) and C(22)"
+    ],
+    "latency_s": 13.98,
+    "context_pages": [
+      11,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 5,
+    "question": "What are the sum insured options available?",
+    "ground_truth": "The sum insured options are Rs 5 lakh, 10 lakh, 15 lakh, 20 lakh, 25 lakh, 50 lakh, 75 lakh, 1 crore and 2 crore.",
+    "answerable": true,
+    "source": "Pages 6, 7, 19, 20 (full list appears in the room rent and health check-up tables on p6, the sub-limit tables on p7, and the Schedule of Benefits header on p19-20)",
+    "response": "The policy document provides the following sum‑insured amounts:\n\n- **Rs 10,00,000 per individual** – this amount is available when each family member is covered separately (Page 2).  \n- **Rs 10,00,000 for the entire family under a floater** – the same Rs 10,00,000 sum insured is available to the whole family when the policy is taken on a floater basis (Page 2).  \n- **Rs 15,00,000 total available amount for an insured member under the Unlimited Restoration illustration** – this reflects a sum insured of Rs 10,00,000 plus a No‑Claim Bonus (NCB) of Rs 5,00,000 for that member (Page 7).  \n\nThese are the sum‑insured options mentioned in the provided policy document.",
+    "contexts": [
+      "[Page 2]\n[Beneﬁt Illustration in respect of policies offered on individual and family ﬂoater basis > Illustration 1] Total Premium for all members of the family is Rs.57,460/-, when each member is covered separately. Sum insured available for each individual is Rs.10,00,000/- | Total Premium for all members of the family is Rs.57,460/-, when they are covered under a single policy. Sum insured available for each family member is Rs.10,00,000/- | Total Premium when policy is opted on ﬂoater basis is Rs.51,258/-, Sum insured of Rs.10,00,000/- is available for the entire family (2A)",
+      "[Page 7]\nTable Unlimited Restoration – illustration If there are 2 insured members with Sum Insured of 10 Lacs each, lets understand how restoration beneﬁt will apply to each under different circumstances. gives Insured 1 for each column: Insured 2.",
+      "[Page 7]\n[Unlimited Restoration – illustration If there are 2 insured members with Sum Insured of 10 Lacs each, lets understand how restoration beneﬁt will apply to each under different circumstances.] Total Available amount | Insured 1: Rs.10,00,000 | Insured 2: Rs.15,00,000 (Sum Insured 10 Lac + NCB 5 Lac)",
+      "[Page 2]\n[Beneﬁt Illustration in respect of policies offered on individual and family ﬂoater basis > Illustration 2] Total Premium for all members of the family is Rs.57.247/-, when each member is covered separately. Sum insured available for each individual is Rs.10,00,000/- | Total Premium for all members of the family is Rs.57.247/-, when they are covered under a single policy. Sum insured available for each family member is Rs.10,00,000/- | Total Premium when policy is opted on ﬂoater basis is Rs.44,163/- Sum insured of Rs.10,00,000/- is available for the entire family (2A+3C)",
+      "[Page 10]\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 1 | Coverage: Room Rent , Boarding, Nursing Expenses, Surgeon, Anesthetist, Medical Practitioner, Consultants, Specialist Fees, Anesthesia, Blood, Oxygen, Operation theatre charges, ICU charges, Surgical appliances, Medicines and Drugs, Diagnostic materials and X-ray, Diagnostic imaging modalities, dialysis, chemotherapy, radiotherapy, cost of pacemaker, stent and similar expenses. | Forming Part of Sum Insured / In addition to Sum Insured: Forming Part of Sum Insured",
+      "[Page 2]\nTable Beneﬁt Illustration in respect of policies offered on individual and family ﬂoater basis gives Age of the Members insured (in yrs) for each Coverage opted on individual basis covering each member of the family separately (at a single point of time): Premium (Rs.), Sum Insured (Rs.); for each Coverage opted on individual basis covering multiple members of the family under a single policy (Sum insured is available for each member of the family): Premium (Rs.), Discount, (if any), Premium After Discount (Rs.), Sum Insured (Rs.); for each Coverage opted on family ﬂoater basis with overall Sum insured (Only one sum insured is available for the entire family): Premium or consolidated premium for all members of family (Rs.), Floater Discount, (if any), Premium After Discount (Rs.), Sum Insured (Rs.)."
+    ],
+    "latency_s": 16.23,
+    "context_pages": [
+      2,
+      7,
+      7,
+      2,
+      10,
+      2
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 6,
+    "question": "What is the ICU charge limit?",
+    "ground_truth": "ICU and operation theatre charges are payable at actuals for every sum insured, so there is no separate ICU limit.",
+    "answerable": true,
+    "source": "Page 19 (Schedule of Benefits row 2)",
+    "response": "I don't have enough information in the provided policy document to answer this question.",
+    "contexts": [
+      "[Page 6]\n2,00,000\n50,00,000/-, 75,00,000/-, 1,00,00,000/-, 2,00,00,000/-\n4,00,000\nNote: The above mentioned sub-limits will not apply for treatment related to congenital \nInternal disease / defects for the new born.",
+      "[Page 4]\nsupervision is considerably more sophisticated and intensive than in the ordinary and other \nwards.\nICU Charges: ICU (Intensive Care Unit) Charges means the amount charged by a \nHospital towards ICU expenses which shall include the expenses for ICU bed, general \nmedical support services provided to any ICU patient including monitoring devices, critical \ncare nursing and intensivist charges.\nMedical Advice: Medical Advice means any consultation or advice from a Medical",
+      "[Page 3]\nat least 15 in-patient beds in all other places;\niii) has qualiﬁed medical practitioner(s) in charge round the clock;\niv) has a fully equipped operation theatre of its own where surgical procedures are \ncarried out;\nv) \nmaintains daily records of patients and makes these accessible to the insurance \ncompany's authorized personnel;\nHospitalization: Hospitalization means admission in a Hospital for a minimum period of",
+      "[Page 5]\nDonor, (if any) for the complications that necessitate a Redo Surgery / ICU admission \nwill be covered.\nThe coverage limit under this beneﬁt is over and above the Limit of Coverage and upto \nthe Sum Insured. This additional Sum Insured can be utilized by the Donor and \nnot by the Insured.\n12. Health Checkup Assure: Expenses incurred towards cost of health check-up up to \nthe limits mentioned in the table given below for each policy year (irrespective of claim).\nof the policy contract.",
+      "[Page 4]\na hospital for more than 24 hours for a covered event.\nIntensive Care Unit: Intensive care unit means an identiﬁed section, ward or wing of a \nhospital which is under the constant supervision of a dedicated medical practitioner(s), and \nwhich is specially equipped for the continuous monitoring and treatment of patients who \nare in a critical condition, or require life support facilities and where the level of care and"
+    ],
+    "latency_s": 13.13,
+    "context_pages": [
+      6,
+      4,
+      3,
+      5,
+      4
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 7,
+    "question": "Are AYUSH treatments covered?",
+    "ground_truth": "Yes. AYUSH treatments are covered under the policy.",
+    "answerable": true,
+    "response": "Yes. AYUSH Treatment is covered. The policy states that medical expenses for inpatient hospitalization incurred on treatment under Ayurveda, Unani, Siddha and Homeopathy systems are payable up to the sum insured (Page 0). AYUSH Treatment is also listed among the benefits that “form part of the sum insured” (Page 10). The definition of AYUSH Treatment is given as medical and/or hospitalization treatments under Ayurveda, Yoga and Naturopathy, Unani, Siddha and Homeopathy (Page 4).",
+    "contexts": [
+      "[Page 0]\nTable Customer Information Sheet - Star Health Assure Insurance Policy gives Title for each column: Description, Refer to Policy Clause Number.",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: U AYUSH Treatment - Medical expenses for Inpatient Hospitalization incurred on treatment under Ayurveda, Unani, Sidha and Homeopathy systems of medicines in a AYUSH Hospital is payable up to the sum insured. | Refer to Policy Clause Number: B(23)",
+      "[Page 5]\n9. \nPost Hospitalization Expenses: Medical expenses incurred up to 180 days \nimmediately after the insured person is discharged from the hospital.\n10. Domiciliary Hospitalization: Coverage for medical treatment (Including AYUSH) for \na period exceeding three days, for an illness/disease/injury, which in the normal \ncourse, would require care and treatment at a Hospital but, on the advice of the \nattending Medical Practitioner,  is taken whilst conﬁned at home under any of the",
+      "[Page 10]\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 21 | Coverage: AYUSH Treatment | Forming Part of Sum Insured / In addition to Sum Insured: Forming Part of Sum Insured\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 22 | Coverage: Coverage for Modern Treatment | Forming Part of Sum Insured / In addition to Sum Insured: Forming Part of Sum Insured",
+      "[Page 4]\nProportionate deduction will not be applicable on these items.\nAssisted Reproduction Treatment: Assisted Reproduction Treatment means Intra \nUterineInsemination (IUI), Intra-Cytoplasmic Sperm Injection (ICSI), In-Vitro Fertilisation \n(IVF) and TESA / TESE (Testicular / Epididymal Sperm Aspiration / Extraction)\nAYUSH Treatment: AYUSH Treatment refers to the medical and / or hospitalization \ntreatments given under 'Ayurveda, Yoga and Naturopathy, Unani, Siddha and \nHomeopathy systems'.",
+      "[Page 7]\n8 of 20\nUnique Identiﬁcation No.: SHAHLIP23131V022223\nStar Health Assure Insurance Policy\nPOL / SHA / V.2 / 2022\nii) \nThis beneﬁt will not be applicable where the sanction is on package rates\niii) Insured stay in Intensive Care Unit or High Dependency Units / wards will not be \ncounted for this purpose\n23. AYUSH Treatment: Medical expenses for Inpatient Hospitalization incurred on \ntreatment under Ayurveda, Unani, Sidha and Homeopathy systems of medicines in a"
+    ],
+    "latency_s": 14.32,
+    "context_pages": [
+      0,
+      0,
+      5,
+      10,
+      4,
+      7
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 8,
+    "question": "What is the free look period?",
+    "ground_truth": "The free look period is 15 days from the date of receipt of the policy document. It applies only to new individual health insurance policies, not to renewals, porting or migration. During this period the insured can review the terms and return the policy if they are not acceptable.",
+    "answerable": true,
+    "response": "The free look period is **fifteen days from the date of receipt of the policy document** during which the insured can review the terms and conditions and return the policy if it is not acceptable (Page 13).",
+    "contexts": [
+      "[Page 13]\ninsurance policies and not on renewals or at the time of porting/migrating the policy.\nThe insured person shall be allowed free look period of ﬁfteen days from date of \nreceipt of the policy document to review the terms and conditions of the policy, and to \nreturn the same if not acceptable.\nlf the insured has not made any claim during the Free Look Period, the insured shall be \nentitled to\ni. \na refund of the premium paid less any expenses incurred by the Company on",
+      "[Page 13]\nfrom the claim amount due under the policy.\n14. Possibility of Revision of Terms of the Policy lncluding the Premium Rates: The \nCompany, with prior approval of lRDAl, may revise or modify the terms of the policy \nincluding the premium rates. The insured person shall be notiﬁed three months before \nthe changes are effected.\n15. Free Look Period: The Free Look Period shall be applicable on new individual health",
+      "[Page 14]\nthe IT Act in respect of the premium paid by any mode other than cash\n29. Important Note\na) \nWhere the policy is issued for more than 1 year, the Sum Insured including \nsublimits, automatic restoration beneﬁt (if applicable), is for each of the year, \nwithout any carry over beneﬁt thereof. The said beneﬁts / covers available for the \n2nd year or 3rd year cannot be utilized in the 1st year itself. The terms, conditions",
+      "[Page 1]\nUntitled table gives Product Name for each column: Description, Refer to Policy Clause Number.",
+      "[Page 1]\nSI. No.: 11 | Product Name: Insured's Rights | Description: Free Look | Refer to Policy Clause Number: D(15)\nSI. No.: 11 | Product Name: Insured's Rights | Description: Implied renewability | Refer to Policy Clause Number: D(10)\nSI. No.: 11 | Product Name: Insured's Rights | Description: Migration and Portability | Refer to Policy Clause Number: D(8) and D(9)\nSI. No.: 11 | Product Name: Insured's Rights | Description: Increase in SI during the Policy term | Refer to Policy Clause Number: Nil",
+      "[Page 3]\nperson's health.\nGrace Period: Grace period means the speciﬁed period of time immediately following the \npremium due date during which a payment can be made to renew or continue a policy in \nforce without loss of continuity beneﬁts such as waiting periods and coverage of \npre-existing diseases. Coverage is not available for the period for which no premium is \nreceived.\nHospital: A hospital means any institution established for in-patient care and day care"
+    ],
+    "latency_s": 11.67,
+    "context_pages": [
+      13,
+      13,
+      14,
+      1,
+      1,
+      3
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 9,
+    "question": "Is there coverage for day care procedures?",
+    "ground_truth": "Yes. All day care treatments are covered, meaning medical or surgical procedures that do not require 24-hour hospitalisation because of advances in medical technology. Certain modern treatments are covered whether done as an in-patient or as day care in a hospital, subject to the policy terms.",
+    "answerable": true,
+    "response": "Yes. The policy states that all day‑care procedures/treatments are covered. (Page 0) (Page 5)",
+    "contexts": [
+      "[Page 0]\nTable Customer Information Sheet - Star Health Assure Insurance Policy gives Title for each column: Description, Refer to Policy Clause Number.",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: B All Day Care Procedures are covered | Refer to Policy Clause Number: B(4)",
+      "[Page 5]\n(DPCO) / National Pharmaceuticals Pricing Authority (NPPA) Capping.\n4. \nAll day care treatments are covered.\n5. \nCoverage for Non-medical Items (Consumables): If there is an admissible claim \nunder inpatient / day care the policy, then Items as per List I will become payable\n6. \nEmergency Road ambulance: Subject to an admissible hospitalization claim, road \nambulance expenses incurred for the following are payable :-\ni.",
+      "[Page 7]\n25. Coverage for Modern Treatment: The following procedures will be covered \n(wherever medically indicated)either as in patient or as part of day care treatment in a \nhospital upto sum insured (including Pre and Post hospitalization expenses) during \nthe policy period;\na) \nUterine artery Embolization and HIFU\nb) \nBalloon Sinuplasty\nc) \nDeep Brain Stimulation\nd) \nOral Chemotherapy\ne) \nImmunotherapy- Monoclonal Antibody to be given as injection\nf) \nIntra Vitreal injections\ng) \nRobotic surgeries",
+      "[Page 3]\nprocedure which is:\ni. \nUndertaken under General or Local Anesthesia in a hospital/day care centre in less \nthan 24 hrs because of technological advancement, and\nii. \nwhich would have otherwise required hospitalization of more than 24 hours\nTreatment normally taken on an out-patient basis is not included in the scope of this \ndeﬁnition\nDeductible: Deductible means a cost sharing requirement under a health insurance policy",
+      "[Page 3]\nqualiﬁed medical practitioner AND must comply with all minimum criterion as under –\ni) \nhas qualiﬁed nursing staff under its employment;\nii) \nhas qualiﬁed medical practitioner/s in charge;\niii) has fully equipped operation theatre of its own where surgical procedures are carried out;\niv) maintains daily records of patients and will make these accessible to the insurance \ncompany's authorized personnel.\nDay Care Treatment: Day care treatment means medical treatment, and/or surgical"
+    ],
+    "latency_s": 10.4,
+    "context_pages": [
+      0,
+      0,
+      5,
+      7,
+      3,
+      3
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 10,
+    "question": "What happens if I miss a premium payment?",
+    "ground_truth": "For renewal premium there is a 30-day grace period to renew and keep continuity benefits, but there is no coverage during the grace period. For instalment premium (half-yearly or quarterly) there is a 7-day grace period; if the premium is not paid within it the policy is cancelled, and there is no coverage from the due date until the premium is received.",
+    "answerable": true,
+    "response": "If an instalment premium is not paid on its due date, **no interest is charged** (Page 13).  \n\nYou then have a **grace period** – the specified time immediately after the premium due date – during which you can make the payment and keep the policy in force without losing continuity benefits such as waiting periods and coverage for pre‑existing diseases (Page 3).  \n\nIf the premium is **not received within that grace period**, the policy will be **cancelled** and **coverage is not available during the grace period** (Page 13).",
+    "contexts": [
+      "[Page 13]\nThe Company may cancel the policy at any time on grounds of misrepresentation, \nnon-disclosure of material facts, fraud by the insured person by giving 15 days' \nwritten notice. There would be no refund of premium on cancellation on grounds \nof misrepresentation, non-disclosure of material facts or fraud\n8. \nMigration: The insured person will have the option to migrate the policy to other \nhealth insurance products/plans offered by the company by applying for migration of",
+      "[Page 3]\nperson's health.\nGrace Period: Grace period means the speciﬁed period of time immediately following the \npremium due date during which a payment can be made to renew or continue a policy in \nforce without loss of continuity beneﬁts such as waiting periods and coverage of \npre-existing diseases. Coverage is not available for the period for which no premium is \nreceived.\nHospital: A hospital means any institution established for in-patient care and day care",
+      "[Page 13]\n\"Waiting Periods\", \"Speciﬁc Waiting Periods\" in the event of payment of premium \nwithin the stipulated grace Period.\niv. No interest will be charged lf the instalment premium is not paid on due date.\nv. \nln case of instalment premium due not received within the grace period, the \npolicy will get cancelled.\nvi. ln the event of a claim, all subsequent premium instalments shall immediately \nbecome due and payable.\nvii. The company has the right to recover and deduct all the pending installments",
+      "[Page 13]\nclaim or claims in the preceding policy years.\niii) Request for renewal along with requisite premium shall be received by the \nCompany before the end of the policy period.\niv) At the end of the policy period, the policy shall terminate and can be renewed \nwithin the Grace Period of 30 days to maintain continuity of beneﬁts without \nbreak in policy.\nv) \nCoverage is not available during the grace period.\nvi) No loading shall apply on renewals based on individual claims experience",
+      "[Page 12]\nobtain any beneﬁt under this policy, all beneﬁts under this policy and the premium paid \nshall be forfeited.\nAny amount already paid against claims made under this policy but which are found \nfraudulent later shall be repaid by all recipient(s)/policyholder(s), who has made that \nparticular claim, who shall be jointly and severally liable for such repayment to the \ninsurer.\nFor the purpose of this clause, the expression \"fraud\" means any of the following acts"
+    ],
+    "latency_s": 11.18,
+    "context_pages": [
+      13,
+      3,
+      13,
+      13,
+      12
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 11,
+    "question": "Is treatment for asthma included in the insurance?",
+    "ground_truth": "Chronic Severe Refractory Asthma is specifically covered. In-patient hospitalization, day care, home care and out-patient expenses for treatment by Advanced Medicine are payable up to 10% of the sum insured, not exceeding Rs 5 lakhs per policy period, when recommended by the treating medical practitioner (pulmonologist).",
+    "answerable": true,
+    "source": "Page 7, B(18)",
+    "response": "Yes. The policy provides coverage for **Treatment for Chronic Severe Refractory Asthma** – payable up to 10 % of the sum insured, not exceeding Rs. 5 lakhs per policy period (Page 6; also listed in the Schedule of Benefits on Page 18).",
+    "contexts": [
+      "[Page 0]\nTable Customer Information Sheet - Star Health Assure Insurance Policy gives Title for each column: Description, Refer to Policy Clause Number.",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: P Treatment for Chronic Severe Refractory Asthma - payable up to 10% of sum insured not exceeding Rs.5 lakhs per policy period | Refer to Policy Clause Number: B(18)",
+      "[Page 7]\n25. Coverage for Modern Treatment: The following procedures will be covered \n(wherever medically indicated)either as in patient or as part of day care treatment in a \nhospital upto sum insured (including Pre and Post hospitalization expenses) during \nthe policy period;\na) \nUterine artery Embolization and HIFU\nb) \nBalloon Sinuplasty\nc) \nDeep Brain Stimulation\nd) \nOral Chemotherapy\ne) \nImmunotherapy- Monoclonal Antibody to be given as injection\nf) \nIntra Vitreal injections\ng) \nRobotic surgeries",
+      "[Page 6]\n5. \nEnhancement of sum insured is subject to underwriters approval\n18. Treatment for Chronic Severe Refractory Asthma: In-patient hospitalization / Day \nCare treatment / Home Care Treatment/ Out-patient treatment expenses incurred for \ntreatment of Chronic Severe Refractory Asthma by Advanced Medicine, if \nrecommended by the treating Medical practitioner (Pulmonologist) is payable up to \n10% of sum insured not exceeding Rs.5 lakhs per policy period.",
+      "[Page 4]\nis thereby entitled to practice medicine within its jurisdiction; and is acting within its scope \nand jurisdiction of license.\nMedically Necessary Treatment: Medically necessary treatment means any treatment, \ntests, medication, or stay in hospital or part of a stay in hospital which:\ni) \nis required for the medical management of the illness or injury suffered by the insured;\nii) \nmust not exceed the level of care necessary to provide safe, adequate and",
+      "[Page 18]\n[SCHEDULE OF BENEFITS] S.No: 17 | Benefit: Treatment for Chronic Severe Refractory Asthma (per policy period) | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: Up to 10% of sum insured not exceeding Rs.5 lakhs\n[SCHEDULE OF BENEFITS] S.No: 18 | Benefit: Compassionate Travel | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: Upto Rs.10,000/-"
+    ],
+    "latency_s": 13.14,
+    "context_pages": [
+      0,
+      0,
+      7,
+      6,
+      4,
+      18
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 12,
+    "question": "Is treatment for a new born baby covered?",
+    "ground_truth": "Yes. Hospitalization expenses of a new born baby are covered from day 1 of birth until the expiry of the policy, up to Rs 2,00,000 per policy period for sums insured of Rs 5 lakh to 25 lakh and Rs 4,00,000 for Rs 50 lakh to 2 crore. The cover is available only if a Delivery Expenses claim is paid under this policy or the mother has been covered under this policy for a continuous 12 months without a break, and the birth must be intimated to the company. These limits do not apply to treatment of congenital internal diseases or defects of the new born. From the following years the baby is covered up to the sum insured if the policyholder opts for new born cover and pays the premium.",
+    "answerable": true,
+    "source": "Page 7, B(17)",
+    "response": "Yes. The policy provides coverage for **hospitalisation expenses for treatment of a New Born Baby** up to the limits mentioned in the policy (Page 0; Page 6; Page 10).  \n\nThe cover is **available only if** a delivery‑expenses claim has been paid under this policy **or** if the mother has been covered continuously for 12 months without a break (Page 11).  \n\nThe expenses are payable from **Day 1 of the baby’s birth** until the expiry date of the policy (Page 6).",
+    "contexts": [
+      "[Page 0]\nTable Customer Information Sheet - Star Health Assure Insurance Policy gives Title for each column: Description, Refer to Policy Clause Number.",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: O Hospitalization expenses for treatment of New Born Baby - Expenses upto the limits mentioned | Refer to Policy Clause Number: B(17)",
+      "[Page 11]\nNew Born Baby Cover: This cover is available only If Delivery Expenses Claim \nis paid under this policy or if Mother is covered under this policy for a continuous \nperiod of 12 months without break\n3. \n30-day waiting period - Code Excl 03\nA. Expenses related to the treatment of any illness within 30 days from the ﬁrst \npolicy commencement date shall be excluded except claims arising due to an \naccident, provided the same are covered",
+      "[Page 10]\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 16 | Coverage: Hospitalisation expenses for Treatment of New Born Baby | Forming Part of Sum Insured / In addition to Sum Insured: Forming Part of Sum Insured\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 17 | Coverage: Compassionate Travel | Forming Part of Sum Insured / In addition to Sum Insured: In addition to Sum Insured",
+      "[Page 6]\nSurgery, Diagnostic Laparoscopy with Ovarian Drilling and such other similar \nsurgery / procedures\n17. Hospitalization expenses for treatment of New Born Baby: Expenses up-to the \nlimit mentioned in the below given table incurred in a hospital/ nursing home on \ntreatment of the New born for any disease, illness (including any congenital disorders) \nor accidental injuries are payable from Day 1 of its birth till the expiry date of the policy.\nSpecial Conditions applicable for this section\n1.",
+      "[Page 11]\nwaiting period of 24 months from the date of inception of this policy\nNote: The above mentioned waiting period will not apply for treatment related to \ncongenital Internal disease / defects for the Unborn.\nc. \nAssisted Reproduction Treatment: A waiting period of 24 months from the \ndate of ﬁrst inception of this policy with the Company for the insured person\nd. \nNew Born Baby Cover: This cover is available only If Delivery Expenses Claim"
+    ],
+    "latency_s": 13.66,
+    "context_pages": [
+      0,
+      0,
+      11,
+      10,
+      6,
+      11
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 13,
+    "question": "What is the waiting period for cataract surgery?",
+    "ground_truth": "A waiting period of 24 months of continuous coverage from the date of inception of the first policy applies to cataract, which is in the list of specified diseases and procedures (Code Excl 02). It does not apply to claims arising from an accident. The waiting period is reduced by prior continuous coverage under IRDAI portability norms, and applies afresh to the extent of any increase in sum insured.",
+    "answerable": true,
+    "source": "Page 11, C(2)",
+    "response": "I don't have enough information in the provided policy document to answer this question.",
+    "contexts": [
+      "[Page 18]\nTable SCHEDULE OF BENEFITS gives Benefit for each Sum Insured (INR): 5 lacs, 10 lacs, 15 lacs, 20 lacs, 25 lacs, 50 lacs, 75 lacs, 1 Crore, 2 Crore.",
+      "[Page 18]\n[SCHEDULE OF BENEFITS] S.No: 13 | Benefit: Waiting Period for Delivery - Normal Delivery and Caesarean Section | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: 24 months for ﬁrst delivery from ﬁrst inception of the policy\n[SCHEDULE OF BENEFITS] S.No: 14 | Benefit: In Utero Fetal Surgery/Intervention | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: 24 months waiting period",
+      "[Page 6]\nfor In Utero Fetal Surgeries and Procedures mentioned below after the waiting period \nof 24 months from the date of inception of this policy:\nNote: The above mentioned waiting period will not apply for treatment related to \ncongenital Internal disease / defects for the Unborn.\nTypes of in utero-surgeries covered\n1) \nOpen Fetal Surgery\n2) \nFetendo Fetal Surgery\n3) \nFetal Image-Guided Surgery (FIGS-IT)\n4) \nEXIT procedure\nTypes of in utero-surgeries/procedures covered",
+      "[Page 10]\npolicy or declared and accepted without a speciﬁc exclusion.\nE. If the Insured Person is continuously covered without any break as deﬁned under \nthe applicable norms on portability stipulated by IRDAI, then waiting period for \nthe same would be reduced to the extent of prior coverage.\nF. \nList of speciﬁc diseases/procedures \n1. \nTreatment of Cataract and diseases of the anterior and posterior chamber \nof the Eye, Diseases of ENT, Diseases related to Thyroid, Benign diseases \nof the breast.\n2.",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: M In Utero Fetal Surgery/Intervention - The Company will pay the expenses incurred for In Utero Fetal Surgeries and Procedures mentioned after the waiting period of 24 months from the date of inception of this policy | Refer to Policy Clause Number: B(15)",
+      "[Page 11]\na. \nDelivery Expenses Cover: Beneﬁt under this section is subject to a waiting \nperiod of 24 months from the date of ﬁrst commencement of Star Health Assure \nInsurance policy and its continuous renewal thereof with the Company\nb. \nIn Utero Fetal Surgery / Intervention: The Company will pay the expenses \nincurred for In Utero Fetal Surgeries and Procedures mentioned below after the \nwaiting period of 24 months from the date of inception of this policy"
+    ],
+    "latency_s": 17.07,
+    "context_pages": [
+      18,
+      18,
+      6,
+      10,
+      0,
+      11
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 14,
+    "question": "What is the initial waiting period after the policy starts?",
+    "ground_truth": "The initial waiting period is 30 days from the first policy commencement date. Claims arising from an accident are excluded from this waiting period, provided they are otherwise covered. It does not apply if the insured person has continuous coverage of more than twelve months.",
+    "answerable": true,
+    "source": "Page 12, C(3)",
+    "response": "The policy includes a **30‑day waiting period** for expenses related to the treatment of any illness that occurs within the first 30 days from the policy’s commencement date (except for accidents, which are covered)【Page 11】.  \n\nIn addition, a **24‑month waiting period** applies to certain specific treatments such as in‑utero fetal surgeries, assisted reproduction treatment, and other listed procedures【Page 11】【Page 6】.  \n\nSo, the initial waiting period that applies to most illness‑related claims right after the policy starts is 30 days.",
+    "contexts": [
+      "[Page 11]\nwaiting period of 24 months from the date of inception of this policy\nNote: The above mentioned waiting period will not apply for treatment related to \ncongenital Internal disease / defects for the Unborn.\nc. \nAssisted Reproduction Treatment: A waiting period of 24 months from the \ndate of ﬁrst inception of this policy with the Company for the insured person\nd. \nNew Born Baby Cover: This cover is available only If Delivery Expenses Claim",
+      "[Page 0]\nTable Customer Information Sheet - Star Health Assure Insurance Policy gives Title for each column: Description, Refer to Policy Clause Number.",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: M In Utero Fetal Surgery/Intervention - The Company will pay the expenses incurred for In Utero Fetal Surgeries and Procedures mentioned after the waiting period of 24 months from the date of inception of this policy | Refer to Policy Clause Number: B(15)",
+      "[Page 11]\nNew Born Baby Cover: This cover is available only If Delivery Expenses Claim \nis paid under this policy or if Mother is covered under this policy for a continuous \nperiod of 12 months without break\n3. \n30-day waiting period - Code Excl 03\nA. Expenses related to the treatment of any illness within 30 days from the ﬁrst \npolicy commencement date shall be excluded except claims arising due to an \naccident, provided the same are covered",
+      "[Page 6]\nfor In Utero Fetal Surgeries and Procedures mentioned below after the waiting period \nof 24 months from the date of inception of this policy:\nNote: The above mentioned waiting period will not apply for treatment related to \ncongenital Internal disease / defects for the Unborn.\nTypes of in utero-surgeries covered\n1) \nOpen Fetal Surgery\n2) \nFetendo Fetal Surgery\n3) \nFetal Image-Guided Surgery (FIGS-IT)\n4) \nEXIT procedure\nTypes of in utero-surgeries/procedures covered",
+      "[Page 10]\nthe time of application and accepted by Insurer.\nApplicable for 1 year and 2 year policy term: Coverage under the policy after \nthe expiry of 36 months for any pre-existing disease is subject to the same being \ndeclared at the time of application and accepted by Insurer.\n2. \nSpeciﬁed disease/procedure waiting period - Code Excl 02\nA. Expenses related to the treatment of the listed Conditions, surgeries/treatments \nshall be excluded until the expiry of 24 months of continuous coverage after the"
+    ],
+    "latency_s": 10.57,
+    "context_pages": [
+      11,
+      0,
+      0,
+      11,
+      6,
+      10
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 15,
+    "question": "How many days of pre-hospitalisation and post-hospitalisation expenses are covered?",
+    "ground_truth": "60 days of pre-hospitalisation expenses and 180 days of post-hospitalisation expenses are covered.",
+    "answerable": true,
+    "source": "Page 6, B(8), B(9)",
+    "response": "The policy covers:\n\n- **Pre‑hospitalisation expenses** for up to **60 days** before the insured person is hospitalized (Page 5).  \n- **Post‑hospitalisation expenses** for up to **180 days** after the insured person is discharged from the hospital (Page 5).",
+    "contexts": [
+      "[Page 5]\nc) \nIt is prescribed by a Medical Practitioner and is Medically Necessary;\nd) \nThe insured person is in India and the treatment is in India only\ne) \nSuch Air ambulance should have been duly licensed to operate as such by \nCompetent Authorities of the Government/s.\n8. \nPre-hospitalization Expenses: Medical expenses incurred up to 60 days \nimmediately before the insured person is hospitalized.\n9. \nPost Hospitalization Expenses: Medical expenses incurred up to 180 days",
+      "[Page 0]\nTable Customer Information Sheet - Star Health Assure Insurance Policy gives Title for each column: Description, Refer to Policy Clause Number.",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: F Pre-Hospitalization - Medical Expenses incurred up to 60 days prior to hospitalization | Refer to Policy Clause Number: B(8)",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: G Post-Hospitalization - Medical Expenses incurred up to 180 days after discharge from the hospital | Refer to Policy Clause Number: B(9)",
+      "[Page 18]\n[SCHEDULE OF BENEFITS] S.No: 5 | Benefit: Pre Hospitalisation Expenses incurred | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: Up to 60 days\n[SCHEDULE OF BENEFITS] S.No: 6 | Benefit: Post Hospitalisation Expenses incurred | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: Up to 180 days",
+      "[Page 5]\n9. \nPost Hospitalization Expenses: Medical expenses incurred up to 180 days \nimmediately after the insured person is discharged from the hospital.\n10. Domiciliary Hospitalization: Coverage for medical treatment (Including AYUSH) for \na period exceeding three days, for an illness/disease/injury, which in the normal \ncourse, would require care and treatment at a Hospital but, on the advice of the \nattending Medical Practitioner,  is taken whilst conﬁned at home under any of the"
+    ],
+    "latency_s": 14.44,
+    "context_pages": [
+      5,
+      0,
+      0,
+      0,
+      18,
+      5
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 16,
+    "question": "Is ambulance cover included, and what is the limit?",
+    "ground_truth": "Yes. Emergency road ambulance expenses are covered at actuals, subject to an admissible hospitalization claim. Air ambulance expenses are covered up to 10% of the sum insured per policy year, subject to conditions.",
+    "answerable": true,
+    "source": "Pages 6, 19, B(6), B(7)",
+    "response": "Yes. The policy provides ambulance coverage.\n\n* **Air‑ambulance** – Expenses are reimbursable up to 10 % of the sum insured per policy year, subject to an admissible hospitalization claim (Page 5).\n\n* **Road‑ambulance** – Coverage is provided for emergency road‑ambulance transport subject to an admissible hospitalization claim, but the document does not specify a monetary limit for this portion (Page 5).",
+    "contexts": [
+      "[Page 16]\nTable LIST I — ITEMS FOR WHICH COVERAGE IS AVAILABLE IN THE POLICY gives ITEM for each column: ITEM.",
+      "[Page 16]\n[LIST I — ITEMS FOR WHICH COVERAGE IS AVAILABLE IN THE POLICY] SI.NO.: 16 | ITEM: CREPE BANDAGE | SI.NO.: 50 | ITEM: AMBULANCE EQUIPMENT\n[LIST I — ITEMS FOR WHICH COVERAGE IS AVAILABLE IN THE POLICY] SI.NO.: 17 | ITEM: DIAPER OF ANY TYPE | SI.NO.: 51 | ITEM: ABDOMINAL BINDER\n[LIST I — ITEMS FOR WHICH COVERAGE IS AVAILABLE IN THE POLICY] SI.NO.: 18 | ITEM: EYELET COLLAR | SI.NO.: 52 | ITEM: PRIVATE NURSES CHARGES- SPECIAL NURSING CHARGES",
+      "[Page 5]\ntaken to their place of residence (if it is in same city) provided the requirement of \nan ambulance to the residence is certiﬁed by the medical practitioner.\n7. \nAir Ambulance: Air ambulance expenses are payable subject to an admissible \nhospitalization claim, the Insured Person(s) is/are eligible for reimbursement of \nexpenses incurred towards the cost of air ambulance service up to10% of sum \ninsured per policy year, provided that \na)",
+      "[Page 14]\nevents \nü\nUpon the death of the Insured Person This means that, the cover for the surviving \nmembers of the family will continue, subject to other terms of the policy.\nü\nUpon exhaustion of the Sum Insured, Limit of Coverage, Limit of Coverage plus \nRestore Sum Insured.\n25. Policy disputes: Any dispute concerning the interpretation of the terms, conditions, \nlimitations and/or exclusions contained herein is understood and agreed to by both",
+      "[Page 5]\n(DPCO) / National Pharmaceuticals Pricing Authority (NPPA) Capping.\n4. \nAll day care treatments are covered.\n5. \nCoverage for Non-medical Items (Consumables): If there is an admissible claim \nunder inpatient / day care the policy, then Items as per List I will become payable\n6. \nEmergency Road ambulance: Subject to an admissible hospitalization claim, road \nambulance expenses incurred for the following are payable :-\ni.",
+      "[Page 5]\ninsured per policy year, provided that \na) \nIt is for emergency care of the insured person which requires immediate and \nrapid ambulance transportation to the hospital/medical centre that ground \ntransportation cannot be provided.\nb) \nNecessary medical treatment not being available at the location where the \nInsured Person is situated at the time of Emergency\nc) \nIt is prescribed by a Medical Practitioner and is Medically Necessary;\nd)"
+    ],
+    "latency_s": 14.25,
+    "context_pages": [
+      16,
+      16,
+      5,
+      14,
+      5,
+      5
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 17,
+    "question": "How soon must a claim be intimated to the insurer?",
+    "ground_truth": "The insurer must be notified within 24 hours of the occurrence of the event. The insurer may relax this time limit depending on the merits of the case.",
+    "answerable": true,
+    "source": "Page 13, D(2)(D)",
+    "response": "A claim must be intimated to the insurer **within 24 hours from the date of occurrence of the event** (Page 12).",
+    "contexts": [
+      "[Page 4]\nupto 90 days.\nNon-Network Provider: Non-Network means any hospital, day care centre or other \nprovider that is not part of the network.\nNotiﬁcation of Claim: Notiﬁcation of claim means the process of intimating a claim to the \ninsurer or TPA through any of the recognized modes of communication.\nOPD treatment: OPD treatment means the one in which the Insured visits a clinic / hospital \nor associated facility like a consultation room for diagnosis and treatment based on the",
+      "[Page 13]\nvi) No loading shall apply on renewals based on individual claims experience\n11. Withdrawal of policy\ni. \nIn the likelihood of this product being withdrawn in future, the Company will \nintimate the insured person about the same 90 days prior to expiry of the policy\nii. \nlnsured Person will have the option to migrate to similar health insurance product \navailable with the Company at the time of renewal with all the accrued continuity",
+      "[Page 12]\nparticulars shall be sent to the Company within 24 hours from the date of \noccurrence of the event irrespective of whether the event is likely to give rise to a \nclaim under the policy  or not. \nNote: Conditions C and D are precedent to admission of liability under the policy. \nHowever the Company will examine and relax the time limit mentioned in these \nconditions depending upon the merits of the case. \nE. Documents to be submitted for Reimbursement: The reimbursement claim is",
+      "[Page 14]\nof the amount of the loss or damage shall be ﬁrst obtained. \nIt is also further expressly agreed and declared that if the Company shall disclaim \nliability to the Insured for any claim hereunder and such claim shall not, within three \nyears from the date of such disclaimer have been made the subject matter of a suit in a \nCourt of Law, then the claim shall for all purposes be deemed to have been \nabandoned and shall not thereafter be recoverable hereunder.",
+      "[Page 10]\nthe time of application and accepted by Insurer.\nApplicable for 1 year and 2 year policy term: Coverage under the policy after \nthe expiry of 36 months for any pre-existing disease is subject to the same being \ndeclared at the time of application and accepted by Insurer.\n2. \nSpeciﬁed disease/procedure waiting period - Code Excl 02\nA. Expenses related to the treatment of the listed Conditions, surgeries/treatments \nshall be excluded until the expiry of 24 months of continuous coverage after the"
+    ],
+    "latency_s": 11.08,
+    "context_pages": [
+      4,
+      13,
+      12,
+      14,
+      10
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 18,
+    "question": "Is there a co-payment under this policy?",
+    "ground_truth": "Yes. A 10% co-payment applies to every claim, for fresh as well as renewal policies, for insured persons whose age at entry was 61 years or above.",
+    "answerable": true,
+    "source": "Page 10, B(30)",
+    "response": "Yes. The policy includes a co‑payment provision. It specifies a co‑payment of **10 % of each and every claim amount** (for insured persons whose age at entry is 61 years and above) (Page 9). The product description for the “Loss Sharing” plan also lists a co‑payment of **10 % of each and every claim amount** (Page 1).",
+    "contexts": [
+      "[Page 3]\naccessible parts of the body\nb) External Congenital Anomaly: Congenital anomaly which is in the visible and \naccessible parts of the body\nCo-Payment: Co-payment means a cost sharing requirement under a health insurance \npolicy that provides that the policyholder/insured will bear a speciﬁed percentage of the \nadmissible claims amount. A co-payment does not reduce the Sum Insured.\nCumulative Bonus: Cumulative Bonus means any increase or addition in the Sum",
+      "[Page 1]\nUntitled table gives Product Name for each column: Description, Refer to Policy Clause Number.",
+      "[Page 1]\nSI. No.: 5 | Product Name: Loss Sharing | Description: In case of a claim, this policy requires you to share the following costs: Expenses exceeding the followings Sublimits 1. Room/ICU charges beyond _______ 2. For the following speciﬁed diseases 3. Deductible of Rs…… per claim / per year / both 4. Co-payment : 10% of each and every claim amount | Refer to Policy Clause Number: B(1) B(25) B(31) B(30)",
+      "[Page 9]\n·\nServices offered are subject to guidelines issued by IRDAI from time to time.\n30. Co-payment: This policy is subject to co-payment of 10% of each and every claim \namount for fresh as well as renewal policies for insured person whose age at the time \nof entry is 61 years and above.",
+      "[Page 6]\nCompany for the insured person.\nb) \nCompany will pay for one Assisted Reproduction Treatment cycle in a policy year. \nc) \nFor the purpose of claiming under this beneﬁt, in-patient treatment is not \nmandatory.\nSpecial Exclusions\nThe Company shall not be liable to make any payments under this policy in \nrespect of any expenses what so ever incurred by the insured person in \nconnection with or in respect of:\n1. \nPre and Post treatment expenses\n2.",
+      "[Page 14]\nInsured Person/s, shall be a condition precedent to any liability of the Company to \nmake any payment under this policy. No waiver of any terms, provisions, conditions, \nand endorsements of this policy shall be valid unless made in writing and signed by an \nauthorized ofﬁcial of the Company. \n21. Any medical practitioner authorized by the Company shall be allowed to examine the \nInsured Person in case of any alleged injury or diseases requiring Hospitalization"
+    ],
+    "latency_s": 12.19,
+    "context_pages": [
+      3,
+      1,
+      1,
+      9,
+      6,
+      14
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 19,
+    "question": "Does the policy offer a cumulative bonus, and how much?",
+    "ground_truth": "Yes. A cumulative bonus of 25% of the sum insured for each claim-free year, up to a maximum of 100% of the sum insured, is provided.",
+    "answerable": true,
+    "source": "Page 8, B(26)",
+    "response": "Yes. The policy provides a **Cumulative Bonus** that is calculated at **25 % of the Sum Insured for each claim‑free year**, with the bonus **capped at a maximum of 100 % of the Sum Insured** (Page 7; Page 1).",
+    "contexts": [
+      "[Page 7]\n26. Cumulative Bonus: The insured person will be eligible for Cumulative bonus \ncalculated at 25% of sum insured for each claim free year and maximum up to 100% of \nthe sum insured \nSpecial Conditions\n1. \nThe Cumulative bonus will be calculated on the expiring Sum Insured\n2. \nIf the insured opts to reduce the Sum Insured at the subsequent renewal, the limit \nof indemnity by way of such Cumulative bonus shall not exceed such reduced \nsum insured \n3. \nIn the event of a claim resulting in;",
+      "[Page 1]\nUntitled table gives Product Name for each column: Description, Refer to Policy Clause Number.",
+      "[Page 1]\nSI. No.: 6 | Product Name: Renewal Condition | Description: Lifelong Renewal | Refer to Policy Clause Number: D(10)\nSI. No.: 6 | Product Name: Renewal Condition | Description: Grace period of 30 days for renewing the policy is provided | Refer to Policy Clause Number: D(10)\nSI. No.: 7 | Product Name: Renewal Beneﬁts | Description: Cumulative Bonus: 25% of the Sum Insured for each claim free year and maximum upto 100% of Sum Insured | Refer to Policy Clause Number: B(26)",
+      "[Page 3]\naccessible parts of the body\nb) External Congenital Anomaly: Congenital anomaly which is in the visible and \naccessible parts of the body\nCo-Payment: Co-payment means a cost sharing requirement under a health insurance \npolicy that provides that the policyholder/insured will bear a speciﬁed percentage of the \nadmissible claims amount. A co-payment does not reduce the Sum Insured.\nCumulative Bonus: Cumulative Bonus means any increase or addition in the Sum",
+      "[Page 14]\nand exceptions that appear in the Policy or in any Endorsement are part of the \ncontract, must be complied with and applies to each policy year\nb) \nWhere the policy is issued on ﬂoater basis, the Sum Insured, cumulative bonus \nand other related beneﬁts ﬂoats amongst the insured members\nc) \nThe Policy Schedule and any Endorsement are to be read together and any word \nor such meaning wherever it appears shall have the meaning as stated in the Act \n/ Indian Laws\nd)",
+      "[Page 3]\nCumulative Bonus: Cumulative Bonus means any increase or addition in the Sum \nInsured granted by the insurer without an associated increase in premium.\nDay Care Centre: A day care centre means any institution established for day care treatment \nof illness and/or injuries or a medical setup with a hospital and which has been registered with \nthe local authorities, wherever applicable, and is under supervision of a registered and"
+    ],
+    "latency_s": 15.26,
+    "context_pages": [
+      7,
+      1,
+      1,
+      3,
+      14,
+      3
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 20,
+    "question": "Is there a health check-up benefit?",
+    "ground_truth": "Yes. Health Checkup Assure covers health check-up expenses every policy year, irrespective of claims, up to limits that depend on the sum insured and on whether the policy is individual or floater (for example Rs 1,500 individual and Rs 2,500 floater at a sum insured of Rs 5 lakh).",
+    "answerable": true,
+    "source": "Page 6, B(12)",
+    "response": "Yes. The policy includes a **Health Checkup Assure** benefit that provides coverage for expenses incurred towards the cost of a health check‑up each policy year, subject to the limits shown in the schedule of benefits (Page 5)【Page 5】.  \n\nThe specific monetary limits for this benefit are listed in the Schedule of Benefits (Page 18):  \n\n- **Individual** Health Checkup Assure – up to ₹1,500 for a ₹5 lakh sum insured, ₹2,000 for ₹10 lakh, ₹4,000 for ₹15 lakh, ₹5,000 for ₹20 lakh/₹25 lakh/₹50 lakh, and ₹8,000 for ₹75 lakh/₹1 Crore/₹2 Crore【Page 18】.  \n- **Floater** Health Checkup Assure – up to ₹2,500 for a ₹5 lakh sum insured, ₹5,000 for ₹10 lakh, ₹8,000 for ₹15 lakh, ₹10,000 for ₹20 lakh/₹25 lakh/₹50 lakh, and ₹15,000 for ₹75 lakh/₹1 Crore/₹2 Crore【Page 18】.  ",
+    "contexts": [
+      "[Page 18]\nTable SCHEDULE OF BENEFITS gives Benefit for each Sum Insured (INR): 5 lacs, 10 lacs, 15 lacs, 20 lacs, 25 lacs, 50 lacs, 75 lacs, 1 Crore, 2 Crore.",
+      "[Page 18]\n[SCHEDULE OF BENEFITS] S.No: 9 | Benefit: Health Checkup Assure-Individual sum Insured (up to) | Sum Insured (INR) -> 5 lacs: 1,500/-; 10 lacs: 2,000/-; 15 lacs: 4,000/-; 20 lacs / 25 lacs / 50 lacs: 5,000/-; 75 lacs / 1 Crore / 2 Crore: 8,000/-\n[SCHEDULE OF BENEFITS] S.No: 10 | Benefit: Health Checkup Assure-Floater sum Insured (up to) | Sum Insured (INR) -> 5 lacs: 2,500/-; 10 lacs: 5,000/-; 15 lacs: 8,000/-; 20 lacs / 25 lacs / 50 lacs: 10,000/-; 75 lacs / 1 Crore / 2 Crore: 15,000/-",
+      "[Page 5]\n[12. Health Checkup Assure: Expenses incurred towards cost of health check-up up to the limits mentioned in the table given below for each policy year (irrespective of claim).] Note: Payment of any Company's right to repudiate or pre-existing disease, claim under this beneﬁt shall not be construed as a waiver of any claim on grounds of non disclosure of material fact for hospitalization expenses under hospitalization provisions",
+      "[Page 5]\nTable 12. Health Checkup Assure: Expenses incurred towards cost of health check-up up to the limits mentioned in the table given below for each policy year (irrespective of claim). gives Sum Insured (Rs.) for each Limit Upto (Rs.): Individual, Floater.",
+      "[Page 9]\nTable - These tests reports to be submitted within 1 month from the date of undergoing the Health Check-Up gives Name of the Ailment for each column: Test to be submitted, Values Criteria to get the additional Wellness points.",
+      "[Page 8]\nThe wellness points earned by the Insured Person(s) under the wellness program, \ncan be utilized to get discount in premium.\nThis Wellness Program is enabled and administered online through Star Wellness \nPlatform through Star Health customer mobile app “Star Power” and through “Star \nHealth Customer Portal (digital platform)”. \nNote: The Wellness Activities mentioned in the table below (from Serial Number 1 to 5) \nare applicable for the Insured person(s) aged 18 years and above only."
+    ],
+    "latency_s": 15.42,
+    "context_pages": [
+      18,
+      18,
+      5,
+      5,
+      9,
+      8
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 21,
+    "question": "Are organ donor expenses covered?",
+    "ground_truth": "Yes. In-patient hospitalization expenses of the donor for organ transplantation to an insured recipient are covered, provided the transplant claim is payable, including donor expenses for complications needing redo surgery or ICU admission. The donor coverage is over and above the limit of coverage and up to the sum insured.",
+    "answerable": true,
+    "source": "Page 6, B(11)",
+    "response": "Yes. The policy provides coverage for organ donor expenses. In‑patient hospitalization expenses incurred for organ transplantation from the donor to the recipient are payable (provided the claim for transplantation is payable) and are listed as a benefit that forms part of the sum insured (Page 0; Page 5; Page 10; Page 18).",
+    "contexts": [
+      "[Page 0]\nTable Customer Information Sheet - Star Health Assure Insurance Policy gives Title for each column: Description, Refer to Policy Clause Number.",
+      "[Page 0]\n[Customer Information Sheet - Star Health Assure Insurance Policy] SI. No.: 1 | Title: What am I covered for | Description: I Organ Donor Expenses - In patient hospitalization expenses incurred for organ transplantation Insured Person are payable provided the claim for transplantation is payable. from the Donor to the Recipient | Refer to Policy Clause Number: B(11)",
+      "[Page 10]\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 8 | Coverage: Domiciliary Hospitalisation | Forming Part of Sum Insured / In addition to Sum Insured: Forming Part of Sum Insured\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 9 | Coverage: Organ Donor Expenses | Forming Part of Sum Insured / In addition to Sum Insured: Forming Part of Sum Insured",
+      "[Page 5]\nand Cold, all Psychiatric or Psychosomatic Disorders, Pyrexia of unknown origin for \nless than 10 days, Tonsillitis and Upper Respiratory Tract infection including Laryngitis \nand Pharyngitis, Arthritis, Gout and Rheumatism. \n11. Organ Donor Expenses In patient hospitalization expenses incurred for organ \ntransplantation from the Donor to the Recipient Insured Person are payable provided \nthe claim for transplantation is payable. In addition, the expenses incurred by the",
+      "[Page 10]\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 10 | Coverage: Complications necessitating Redo surgery or ICU admission for the Organ donor | Forming Part of Sum Insured / In addition to Sum Insured: In addition to Sum Insured\n[List of Beneﬁts which are part of sum insured and in addition to sum insured] SI.No.: 11 | Coverage: Health Check Up Assure | Forming Part of Sum Insured / In addition to Sum Insured: In addition to Sum Insured",
+      "[Page 18]\n[SCHEDULE OF BENEFITS] S.No: 7 | Benefit: Domiciliary Hospitalization | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: Coverage for medical treatment (Including AYUSH) for a period exceeding three days\n[SCHEDULE OF BENEFITS] S.No: 8 | Benefit: Organ Donor Expenses | Sum Insured (INR) -> 5 lacs / 10 lacs / 15 lacs / 20 lacs / 25 lacs / 50 lacs / 75 lacs / 1 Crore / 2 Crore: Actual"
+    ],
+    "latency_s": 15.81,
+    "context_pages": [
+      0,
+      0,
+      10,
+      5,
+      10,
+      18
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 22,
+    "question": "Can I cancel the policy mid-term, and is there a refund?",
+    "ground_truth": "Yes. The policyholder may cancel the policy by giving 15 days' written notice, and the insurer refunds premium for the unexpired period according to the cancellation table. No refund is made if a claim has been admitted or lodged or any benefit has been availed.",
+    "answerable": true,
+    "source": "Pages 13-14, D(7)",
+    "response": "Yes, you may cancel the policy before the end of the term by giving the Company **15 days’ written notice**.  \nIf you cancel, the premium that is retained by the Company is set out in the cancellation table for a 1‑year term without an installment option:\n\n* **Up to one month** of risk – the Company retains **22.5 % of the policy premium** (the remaining 77.5 % would be refunded).  \n* **Exceeding one month up to 3 months** of risk – the Company retains **37.5 % of the policy premium** (the remaining 62.5 % would be refunded).  \n* **Exceeding 3 months up to 6 months** – the table is shown only up to this point; the exact retained rate for periods beyond 3 months is not provided in the excerpt. (Page 12)\n\nHowever, the policy also states that **no refund of premium will be made** if:\n\n* **Any claim has been admitted, lodged, or any benefit has been availed** by the insured under the policy (Page 13).  \n* The cancellation is **by the Company on grounds of misrepresentation, non‑disclosure of material facts, or fraud** (Page 13).  \n\nSo you can cancel mid‑term and receive a refund according to the retention rates above, **provided no claim has been made and the cancellation is not for the reasons listed**.",
+    "contexts": [
+      "[Page 12]\nwithin the knowledge of the insurer.\n7. \nCancellation\ni. \nThe policyholder may cancel this policy by giving 15 days' written notice and in \nsuch an event, the Company shall refund premium for the unexpired policy \nperiod as detailed below;\nCancellation table applicable for  Policy Term 1 Year without installment option\nPeriod on risk\nRate of premium to be retained\nUp to one mth\n22.5%  of the policy premium\nExceeding one mth up to 3 mths\n37.5%  of the policy premium\nExceeding 3 mths up to 6 mths",
+      "[Page 13]\nThe Company may cancel the policy at any time on grounds of misrepresentation, \nnon-disclosure of material facts, fraud by the insured person by giving 15 days' \nwritten notice. There would be no refund of premium on cancellation on grounds \nof misrepresentation, non-disclosure of material facts or fraud\n8. \nMigration: The insured person will have the option to migrate the policy to other \nhealth insurance products/plans offered by the company by applying for migration of",
+      "[Page 13]\nclaim or claims in the preceding policy years.\niii) Request for renewal along with requisite premium shall be received by the \nCompany before the end of the policy period.\niv) At the end of the policy period, the policy shall terminate and can be renewed \nwithin the Grace Period of 30 days to maintain continuity of beneﬁts without \nbreak in policy.\nv) \nCoverage is not available during the grace period.\nvi) No loading shall apply on renewals based on individual claims experience",
+      "[Page 13]\n14 of 20\nUnique Identiﬁcation No.: SHAHLIP23131V022223\nStar Health Assure Insurance Policy\nPOL / SHA / V.2 / 2022\nNotwithstanding anything contained herein or otherwise, no refunds of premium shall \nbe made in respect of Cancellation where, any claim has been admitted or has been \nlodged or any beneﬁt has been availed by the insured person under the policy.\nii. \nThe Company may cancel the policy at any time on grounds of misrepresentation,",
+      "[Page 13]\ninsurance policies and not on renewals or at the time of porting/migrating the policy.\nThe insured person shall be allowed free look period of ﬁfteen days from date of \nreceipt of the policy document to review the terms and conditions of the policy, and to \nreturn the same if not acceptable.\nlf the insured has not made any claim during the Free Look Period, the insured shall be \nentitled to\ni. \na refund of the premium paid less any expenses incurred by the Company on"
+    ],
+    "latency_s": 14.4,
+    "context_pages": [
+      12,
+      13,
+      13,
+      13,
+      13
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 23,
+    "question": "Does the policy cover dental treatment?",
+    "ground_truth": "The Customer Information Sheet lists corrective and cosmetic dental surgeries among the major exclusions. The policy wording does not otherwise state whether other dental treatment is covered.",
+    "answerable": true,
+    "source": "Page 2, Major Exclusions",
+    "response": "The policy document defines dental treatment as “a treatment related to teeth or structures supporting teeth including examinations, fillings (where appropriate), crowns, extractions and surgery” (Page 3).  \n\nHowever, the only reference to dental procedures in the policy is that “corrective & cosmetic dental surgeries” are listed among the major exclusions (Page 1). The document does not contain any statement that dental treatment is covered, nor does it provide any other details about dental benefits.\n\n**Therefore, based on the provided policy document, dental treatment is defined but the only mention is that certain dental surgeries are excluded; the document does not specify that dental treatment is covered.**",
+    "contexts": [
+      "[Page 3]\nthat provides that the insurer will not be liable for a speciﬁed rupee amount in case of \nindemnity policies and for a speciﬁed number of days/hours in case of hospital cash \npolicies which will apply before any beneﬁts are payable by the insurer. A deductible does \nnot reduce the SumInsured.\nDental Treatment: Dental treatment means a treatment related to teeth or structures \nsupporting teeth including examinations, ﬁllings (where appropriate), crowns, extractions \nand surgery.",
+      "[Page 1]\nUntitled table gives Product Name for each column: Description, Refer to Policy Clause Number.",
+      "[Page 1]\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: V. Refractive error correction, hearing impairment correction, corrective & cosmetic dental surgeries | Refer to Policy Clause Number: C(15) and C(30)\nSI. No.: 2 | Product Name: What are the Major Exclusions in the policy | Description: VI. Substance abuse, self-inﬂicted injuries | Refer to Policy Clause Number: C(12) and C(22)",
+      "[Page 7]\n25. Coverage for Modern Treatment: The following procedures will be covered \n(wherever medically indicated)either as in patient or as part of day care treatment in a \nhospital upto sum insured (including Pre and Post hospitalization expenses) during \nthe policy period;\na) \nUterine artery Embolization and HIFU\nb) \nBalloon Sinuplasty\nc) \nDeep Brain Stimulation\nd) \nOral Chemotherapy\ne) \nImmunotherapy- Monoclonal Antibody to be given as injection\nf) \nIntra Vitreal injections\ng) \nRobotic surgeries",
+      "[Page 11]\nNew Born Baby Cover: This cover is available only If Delivery Expenses Claim \nis paid under this policy or if Mother is covered under this policy for a continuous \nperiod of 12 months without break\n3. \n30-day waiting period - Code Excl 03\nA. Expenses related to the treatment of any illness within 30 days from the ﬁrst \npolicy commencement date shall be excluded except claims arising due to an \naccident, provided the same are covered",
+      "[Page 6]\nCompany for the insured person.\nb) \nCompany will pay for one Assisted Reproduction Treatment cycle in a policy year. \nc) \nFor the purpose of claiming under this beneﬁt, in-patient treatment is not \nmandatory.\nSpecial Exclusions\nThe Company shall not be liable to make any payments under this policy in \nrespect of any expenses what so ever incurred by the insured person in \nconnection with or in respect of:\n1. \nPre and Post treatment expenses\n2."
+    ],
+    "latency_s": 12.39,
+    "context_pages": [
+      3,
+      1,
+      1,
+      7,
+      11,
+      6
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 24,
+    "question": "What is the cashless claim procedure?",
+    "ground_truth": "Cashless treatment is available only at network hospitals. The insured calls the insurer's help-line and informs the ID number, produces the insurer's ID card at the hospital helpdesk, and completes the pre-authorisation form there. The treating doctor fills in the treatment details and the hospital fills in the expected cost, and the form is submitted to the insurer, who may ask for more documents and then approves or rejects the request. In an emergency hospitalization the insurer must be informed within 24 hours.",
+    "answerable": true,
+    "source": "Pages 12-13, D(2)(B)",
+    "response": "The policy describes the cashless claim process as follows:\n\n1. **Contact the insurer’s assistance line** – the insured must call the 24‑hour helpline at 044‑69006900 or the toll‑free number 1800 425 2255. Senior citizens may use the dedicated number 044‑40020888. (Page 11)  \n2. **Provide the ID number** – the insured should inform the ID number for easy reference when speaking with the insurer’s representative. (Page 11)  \n\nThe policy also defines a cashless facility as “a facility extended by the insurer to the insured where the payments, of the costs of treatment undergone by the insured in accordance with the policy terms and conditions, are directly made to the network provider.” (Page 3)\n\n**What the context does not cover:**  \nThe document does not provide any additional steps beyond calling the helpline and giving the ID number, nor does it detail any further documentation, approvals, or post‑treatment procedures that may be required for a cashless claim.",
+    "contexts": [
+      "[Page 3]\noperation theatre where surgical procedures are to be carried out;\niv. Maintaining daily records of the patients and making them accessible to the \ninsurance company's authorized representative.\nCashless facility: Cashless facility means a facility extended by the insurer to the insured \nwhere the payments, of the costs of treatment undergone by the insured in accordance \nwith the policy terms and conditions, are directly made to the network provider by the",
+      "[Page 11]\nnon-disclosure of any material fact by the policyholder.\n2. \nClaim Settlement\nA. Condition Precedent to Admission of Liability: The terms and conditions of \nthe policy must be fulﬁlled by the insured person for the Company to make any \npayment for claim(s) arising under the policy\nB. For Cashless Treatment\na. \nFor assistance call 24 hours help-line 044-69006900 or Toll Free No. \n1800 425 2255. Senior Citizens may call at 044-40020888\nb. \nInform the ID number for easy reference\nc.",
+      "[Page 4]\n(including all members under family cover and members of group health insurance policy), \nto transfer the credit gained for pre-existing conditions and time bound exclusions, with the \nsame insurer.\nNetwork Provider: Network Provider means hospitals or health care providers enlisted by \nan insurer, TPA or jointly by an Insurer and TPA to provide medical services to an insured by \na cashless facility.\nNew Born Baby: Newborn baby means baby born during the Policy Period and is aged \nupto 90 days.",
+      "[Page 14]\nthe IT Act in respect of the premium paid by any mode other than cash\n29. Important Note\na) \nWhere the policy is issued for more than 1 year, the Sum Insured including \nsublimits, automatic restoration beneﬁt (if applicable), is for each of the year, \nwithout any carry over beneﬁt thereof. The said beneﬁts / covers available for the \n2nd year or 3rd year cannot be utilized in the 1st year itself. The terms, conditions",
+      "[Page 1]\nUntitled table gives Product Name for each column: Description, Refer to Policy Clause Number.",
+      "[Page 1]\nSI. No.: 9 | Product Name: Claims | Description: For Cashless Service | Refer to Policy Clause Number: D(2)(B and C)\nSI. No.: 9 | Product Name: Claims | Description: For Reimbursement of claim | Refer to Policy Clause Number: D(2)(B and C)\nSI. No.: 10 | Product Name: Policy Servicing Grievances/ Complaints | Description: Company Ofﬁcials IRDAI/(IGMS/Call Centre) Ombudsman | Refer to Policy Clause Number: D(16) and D(22)"
+    ],
+    "latency_s": 16.7,
+    "context_pages": [
+      3,
+      11,
+      4,
+      14,
+      1,
+      1
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  },
+  {
+    "id": 25,
+    "question": "What is the maximum entry age for the policy?",
+    "ground_truth": "The policy does not mention a maximum entry age.",
+    "answerable": false,
+    "source": "Not specified in the 20-page PDF",
+    "response": "I don't have enough information in the provided policy document to answer this question.",
+    "contexts": [
+      "[Page 9]\n·\nServices offered are subject to guidelines issued by IRDAI from time to time.\n30. Co-payment: This policy is subject to co-payment of 10% of each and every claim \namount for fresh as well as renewal policies for insured person whose age at the time \nof entry is 61 years and above.",
+      "[Page 2]\nTable Beneﬁt Illustration in respect of policies offered on individual and family ﬂoater basis gives Age of the Members insured (in yrs) for each Coverage opted on individual basis covering each member of the family separately (at a single point of time): Premium (Rs.), Sum Insured (Rs.); for each Coverage opted on individual basis covering multiple members of the family under a single policy (Sum insured is available for each member of the family): Premium (Rs.), Discount, (if any), Premium After Discount (Rs.), Sum Insured (Rs.); for each Coverage opted on family ﬂoater basis with overall Sum insured (Only one sum insured is available for the entire family): Premium or consolidated premium for all members of family (Rs.), Floater Discount, (if any), Premium After Discount (Rs.), Sum Insured (Rs.).",
+      "[Page 2]\n[Beneﬁt Illustration in respect of policies offered on individual and family ﬂoater basis > Illustration 1] Age of the Members insured (in yrs): 58 | Coverage opted on individual basis covering each member of the family separately -> Premium (Rs.): 25,588; Sum Insured (Rs.): 10,00,000 | Coverage opted on individual basis covering multiple members of the family under a single policy -> Premium (Rs.): 25,588; Discount, (if any): Nil; Premium After Discount (Rs.): 25,588; Sum Insured (Rs.): 10,00,000 | Coverage opted on family ﬂoater basis with overall Sum insured -> Premium or consolidated premium for all members of family (Rs.): 57,460; Floater Discount, (if any): 6,202; Premium After Discount (Rs.): 51,258; Sum Insured (Rs.): 10,00,000",
+      "[Page 2]\n[Beneﬁt Illustration in respect of policies offered on individual and family ﬂoater basis > Illustration 2] Age of the Members insured (in yrs): 51 | Coverage opted on individual basis covering each member of the family separately -> Premium (Rs.): 19,787; Sum Insured (Rs.): 10,00,000 | Coverage opted on individual basis covering multiple members of the family under a single policy -> Premium (Rs.): 19,787; Discount, (if any): Nil; Premium After Discount (Rs.): 19,787; Sum Insured (Rs.): 10,00,000 | Coverage opted on family ﬂoater basis with overall Sum insured -> Premium or consolidated premium for all members of family (Rs.): 57.247; Floater Discount, (if any): 13,084; Premium After Discount (Rs.): 44,163; Sum Insured (Rs.): 10,00,000",
+      "[Page 2]\n[Beneﬁt Illustration in respect of policies offered on individual and family ﬂoater basis > Illustration 2] Age of the Members insured (in yrs): 54 | Coverage opted on individual basis covering each member of the family separately -> Premium (Rs.): 19,787; Sum Insured (Rs.): 10,00,000 | Coverage opted on individual basis covering multiple members of the family under a single policy -> Premium (Rs.): 19,787; Discount, (if any): Nil; Premium After Discount (Rs.): 19,787; Sum Insured (Rs.): 10,00,000 | Coverage opted on family ﬂoater basis with overall Sum insured -> Premium or consolidated premium for all members of family (Rs.): 57.247; Floater Discount, (if any): 13,084; Premium After Discount (Rs.): 44,163; Sum Insured (Rs.): 10,00,000",
+      "[Page 2]\n[Beneﬁt Illustration in respect of policies offered on individual and family ﬂoater basis > Illustration 2] Age of the Members insured (in yrs): 17 | Coverage opted on individual basis covering each member of the family separately -> Premium (Rs.): 5,891; Sum Insured (Rs.): 10,00,000 | Coverage opted on individual basis covering multiple members of the family under a single policy -> Premium (Rs.): 5,891; Discount, (if any): Nil; Premium After Discount (Rs.): 5,891; Sum Insured (Rs.): 10,00,000 | Coverage opted on family ﬂoater basis with overall Sum insured -> Premium or consolidated premium for all members of family (Rs.): 57.247; Floater Discount, (if any): 13,084; Premium After Discount (Rs.): 44,163; Sum Insured (Rs.): 10,00,000"
+    ],
+    "latency_s": 14.6,
+    "context_pages": [
+      9,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "retriever": "pipeline",
+    "contexts_refreshed_at": "2026-11-18T15:35:40"
+  }
+]
