@@ -1,0 +1,21 @@
+{
+  "created": "2026-11-18T21:35:13",
+  "source_file": "eval/answers_after_pipeline_refreshed.json",
+  "refusal_sentence": "I don't have enough information in the provided policy document",
+  "answerable_total": 24,
+  "answerable_refused": 2,
+  "answerable_refused_ids": [
+    6,
+    13
+  ],
+  "answerable_refused_questions": {
+    "6": "What is the ICU charge limit?",
+    "13": "What is the waiting period for cataract surgery?"
+  },
+  "unanswerable_total": 1,
+  "unanswerable_refused": 1,
+  "notes": {
+    "13": "Retrieved contexts include the page-11 chunk that lists cataract under 'List of specific diseases/procedures', but not the preceding chunk with 'Specified disease/procedure waiting period - Code Excl 02 ... excluded until the expiry of 24 months'. The 24-month figure was not in the context, so the refusal follows the prompt rule. Page-level hit rate counts this as a hit.",
+    "contexts_caveat": "Contexts in the source file were recomputed with the current pipeline after the run; the page sequences were checked against the run log for questions 1-5 only."
+  }
+}
