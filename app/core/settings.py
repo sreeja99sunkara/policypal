@@ -45,3 +45,22 @@ def rate_limit_per_minute() -> int:
 def rate_limit_per_day() -> int:
     """Queries per client IP per rolling 24 hours; 0 disables the daily limit."""
     return env_int("RATE_LIMIT_PER_DAY", 100)
+
+
+def demo_daily_query_cap() -> int:
+    """Total answered queries per UTC day across all clients (protects the Groq
+    key). Default 150 in DEMO_MODE, off otherwise; set 0 to disable."""
+    return env_int("DEMO_DAILY_QUERY_CAP", 150 if demo_mode() else 0)
+
+
+def max_concurrent_queries() -> int:
+    """Queries answered at the same time; extra requests wait for a free slot."""
+    return max(1, env_int("MAX_CONCURRENT_QUERIES", 1))
+
+
+def query_wait_seconds() -> float:
+    """How long a request waits for a free slot before getting a 503."""
+    try:
+        return max(0.0, float(os.getenv("QUERY_WAIT_SECONDS") or 30))
+    except ValueError:
+        return 30.0

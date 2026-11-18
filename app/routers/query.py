@@ -5,7 +5,9 @@ from app.schemas.query import QueryRequest, QueryResponse
 from app.services.rag_chain import get_rag_chain
 from app.services.vectorstore import has_documents
 from app.services.citations import rewrite_citations
-from app.services.rate_limit import RateLimited, client_ip, get_query_limiter
+from app.services.rate_limit import (
+    Busy, RateLimited, client_ip, get_daily_cap, get_query_limiter, get_query_slots,
+)
 from app.core import settings
 from app.core.logger import get_logger, log_with_fields
 
@@ -22,7 +24,8 @@ def get_chain():
     response_model=QueryResponse,
     responses={
         422: {"description": "Question longer than MAX_QUESTION_CHARS"},
-        429: {"description": "Per-IP rate limit reached (see Retry-After)"},
+        429: {"description": "Per-IP rate limit or daily demo cap reached (see Retry-After)"},
+        503: {"description": "All query slots busy for QUERY_WAIT_SECONDS"},
     },
 )
 def query(request: QueryRequest, http_request: Request, chain=Depends(get_chain)):
@@ -43,19 +46,50 @@ def query(request: QueryRequest, http_request: Request, chain=Depends(get_chain)
         http_request.headers.get("x-forwarded-for"),
         http_request.client.host if http_request.client else None,
     )
+    limiter, cap, slots = get_query_limiter(), get_daily_cap(), get_query_slots()
+    # Cheap checks first, so a limited client is turned away without waiting.
     try:
-        get_query_limiter().hit(ip)
+        limiter.check(ip)
+        cap.check()
     except RateLimited as e:
-        log_with_fields(logger, "warning", "Rate limited", retry_after=e.retry_after)
-        return JSONResponse(
-            status_code=429,
-            content={"detail": e.message},
-            headers={"Retry-After": str(e.retry_after)},
-        )
+        return _too_many(e)
 
     if not has_documents():
         raise HTTPException(status_code=404, detail="No documents have been uploaded yet. Please upload a policy PDF first.")
 
+    try:
+        slots.acquire()
+    except Busy as e:
+        log_with_fields(logger, "warning", "Query rejected: busy", wait_seconds=slots.wait_seconds)
+        return JSONResponse(status_code=503, content={"detail": str(e)}, headers={"Retry-After": "10"})
+    try:
+        # Count the query only now that it will run, so 4xx/503 rejections never
+        # use up a client's quota or the daily cap. Re-checked here because other
+        # requests may have been counted while this one waited for a slot.
+        try:
+            limiter.hit(ip)
+        except RateLimited as e:
+            return _too_many(e)
+        try:
+            cap.hit()
+        except RateLimited as e:
+            limiter.unhit(ip)  # rejected, so it must not use the client's quota
+            return _too_many(e)
+        return _answer(request, chain)
+    finally:
+        slots.release()
+
+
+def _too_many(e: RateLimited) -> JSONResponse:
+    log_with_fields(logger, "warning", "Rate limited", retry_after=e.retry_after)
+    return JSONResponse(
+        status_code=429,
+        content={"detail": e.message},
+        headers={"Retry-After": str(e.retry_after)},
+    )
+
+
+def _answer(request: QueryRequest, chain) -> QueryResponse:
     start_time = time.time()
     try:
         result = chain.invoke(request.question)

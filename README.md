@@ -198,6 +198,9 @@ no `.env`):
 | `RATE_LIMIT_PER_MINUTE` | `10` | Per client IP, rolling window; `0` disables. |
 | `RATE_LIMIT_PER_DAY` | `100` | Per client IP, rolling 24 h; `0` disables. |
 | `MAX_QUESTION_CHARS` | `500` | Longer questions get a 422. |
+| `DEMO_DAILY_QUERY_CAP` | `150` (`0` = off when `DEMO_MODE` is off) | Answered questions per UTC day across all users; then a 429 until 00:00 UTC. |
+| `MAX_CONCURRENT_QUERIES` | `1` | Questions answered at once; others wait. |
+| `QUERY_WAIT_SECONDS` | `30` | How long a waiting question waits for a slot before a 503 "busy" reply. |
 | `PORT` | `7860` | Streamlit's port; most hosts set this themselves. |
 | `API_PORT` | `8000` | Internal API port. |
 | `DEMO_POLICY_NAME` | Star Health policy | Name shown in the UI's demo note. |
@@ -236,7 +239,9 @@ right-most `X-Forwarded-For` entry: the left-most entries are set by the client
 and could be forged to get around the limit. Behind more than one proxy hop the
 right-most entry may be a proxy address, so all users would share one bucket;
 check this on your host. The limiter does not cap total Groq usage, so also set
-a spending limit on the Groq account.
+a spending limit on the Groq account. `DEMO_DAILY_QUERY_CAP` bounds the total
+per day per process. Rejected requests (422, 429, 503) never count against
+either the per-IP limits or the daily cap.
 
 **Platform notes. None of these were tried; all are unverified.**
 
@@ -316,8 +321,9 @@ Response (abridged; `text` holds the full chunk):
 
 Errors return `{"detail": "..."}`:
 - **422:** the question is longer than `MAX_QUESTION_CHARS` (default 500).
-- **429:** the per-IP rate limit was reached; a `Retry-After` header is set
-  (see [Deploying a demo](#deploying-a-demo)).
+- **429:** the per-IP rate limit or the daily demo cap was reached; a
+  `Retry-After` header is set (see [Deploying a demo](#deploying-a-demo)).
+- **503:** all query slots stayed busy for `QUERY_WAIT_SECONDS`.
 - **400:** the question is empty.
 - **404:** no document is indexed.
 

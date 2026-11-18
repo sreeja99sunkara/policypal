@@ -144,3 +144,133 @@ def test_upload_not_blocked_when_demo_mode_off(client):
     r = c.post("/api/upload", files={"file": ("p.txt", b"x", "text/plain")})
     assert r.status_code == 400
     assert c.get("/health").json()["demo_mode"] is False
+
+
+# ---- global daily cap ----
+
+from datetime import datetime, timedelta, timezone
+import threading
+import time as _time
+
+from app.core import settings
+from app.services.rate_limit import DailyCap, QuerySlots, Busy
+
+
+def test_daily_cap_blocks_and_resets_at_utc_midnight():
+    now = [datetime(2026, 11, 19, 21, 30, tzinfo=timezone.utc)]
+    cap = DailyCap(2, now=lambda: now[0])
+    cap.hit(); cap.hit()
+    with pytest.raises(RateLimited) as e:
+        cap.hit()
+    assert "used its 2 questions for today" in e.value.message
+    assert "00:00 UTC" in e.value.message and "3 hours" in e.value.message
+    assert e.value.retry_after == int(2.5 * 3600)
+    assert cap.used_today == 2  # the rejected attempt was not counted
+    now[0] += timedelta(hours=3)  # next UTC day
+    cap.hit()
+    assert cap.used_today == 1
+
+
+def test_daily_cap_defaults(monkeypatch):
+    monkeypatch.delenv("DEMO_DAILY_QUERY_CAP", raising=False)
+    monkeypatch.setenv("DEMO_MODE", "true")
+    assert settings.demo_daily_query_cap() == 150
+    monkeypatch.setenv("DEMO_MODE", "false")
+    assert settings.demo_daily_query_cap() == 0  # off outside the demo unless set
+    monkeypatch.setenv("DEMO_DAILY_QUERY_CAP", "7")
+    assert settings.demo_daily_query_cap() == 7
+    monkeypatch.delenv("MAX_CONCURRENT_QUERIES", raising=False)
+    monkeypatch.delenv("QUERY_WAIT_SECONDS", raising=False)
+    assert settings.max_concurrent_queries() == 1
+    assert settings.query_wait_seconds() == 30.0
+
+
+def test_daily_cap_endpoint_and_rejections_not_counted(client, monkeypatch):
+    c, stub = client
+    monkeypatch.setenv("DEMO_DAILY_QUERY_CAP", "2")
+    rate_limit.reset_query_limiter()
+    assert ask(c, question="x" * 600, ip="1.1.1.1").status_code == 422  # not counted
+    assert ask(c, ip="1.1.1.1").status_code == 200
+    assert ask(c, ip="2.2.2.2").status_code == 200
+    r = ask(c, ip="3.3.3.3")
+    assert r.status_code == 429
+    assert "used its 2 questions for today" in r.json()["detail"]
+    assert int(r.headers["Retry-After"]) > 0
+    assert stub.calls == 2
+    assert rate_limit.get_daily_cap().used_today == 2
+
+
+def test_cap_rejection_does_not_use_client_quota():
+    lim = RateLimiter(per_minute=1, per_day=10, clock=Clock())
+    lim.hit("a")
+    lim.unhit("a")  # what the router does when the daily cap rejects after hit()
+    lim.hit("a")
+
+
+# ---- concurrency guard ----
+
+class BlockingChain(StubChain):
+    def __init__(self):
+        super().__init__()
+        self.started = threading.Event()
+        self.release = threading.Event()
+
+    def invoke(self, question):
+        self.started.set()
+        self.release.wait(10)
+        return super().invoke(question)
+
+
+def test_busy_returns_503_and_is_not_counted(client, monkeypatch):
+    c, _ = client
+    monkeypatch.setenv("MAX_CONCURRENT_QUERIES", "1")
+    monkeypatch.setenv("QUERY_WAIT_SECONDS", "0.3")
+    monkeypatch.setenv("DEMO_DAILY_QUERY_CAP", "2")
+    rate_limit.reset_query_limiter()
+    chain = BlockingChain()
+    app.dependency_overrides[query_router.get_chain] = lambda: chain
+
+    first = {}
+    t = threading.Thread(target=lambda: first.setdefault("r", ask(c, ip="1.1.1.1")))
+    t.start()
+    assert chain.started.wait(10)
+    started = _time.monotonic()
+    r = ask(c, ip="2.2.2.2")
+    waited = _time.monotonic() - started
+    assert r.status_code == 503
+    assert "busy answering other questions" in r.json()["detail"]
+    assert r.headers["Retry-After"] == "10"
+    assert 0.25 <= waited < 5  # it waited for a slot before giving up
+    chain.release.set()
+    t.join(10)
+    assert first["r"].status_code == 200
+    # the 503 used neither the cap nor 2.2.2.2's quota
+    assert rate_limit.get_daily_cap().used_today == 1
+    assert ask(c, ip="2.2.2.2").status_code == 200
+
+
+def test_waiting_request_runs_when_slot_frees(client, monkeypatch):
+    c, _ = client
+    monkeypatch.setenv("MAX_CONCURRENT_QUERIES", "1")
+    monkeypatch.setenv("QUERY_WAIT_SECONDS", "5")
+    rate_limit.reset_query_limiter()
+    chain = BlockingChain()
+    app.dependency_overrides[query_router.get_chain] = lambda: chain
+    first = {}
+    t = threading.Thread(target=lambda: first.setdefault("r", ask(c, ip="1.1.1.1")))
+    t.start()
+    assert chain.started.wait(10)
+    threading.Timer(0.3, chain.release.set).start()
+    r = ask(c, ip="2.2.2.2")  # waits about 0.3 s, then runs
+    t.join(10)
+    assert r.status_code == 200 and first["r"].status_code == 200
+    assert chain.calls == 2
+
+
+def test_query_slots_unit():
+    slots = QuerySlots(2, wait_seconds=0.05)
+    slots.acquire(); slots.acquire()
+    with pytest.raises(Busy):
+        slots.acquire()
+    slots.release()
+    slots.acquire()
