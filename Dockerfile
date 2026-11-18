@@ -2,6 +2,8 @@
 # PolicyPal images. Targets:
 #   api  - FastAPI app (uvicorn, no --reload), embedded Chroma, CPU-only torch
 #   ui   - Streamlit front end
+#   demo - both in one container for a public demo: uvicorn on 127.0.0.1 and
+#          Streamlit on $PORT (default 7860); DEMO_MODE on, fixed policy PDF
 # No secrets and no data/ in the images: .env is passed at run time (compose
 # env_file); the Chroma index and the Hugging Face model cache live in volumes.
 
@@ -78,3 +80,26 @@ EXPOSE 8501
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=4).status == 200 else 1)"
 CMD ["streamlit", "run", "streamlit_app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+
+# ---------------------------------------------------------------- demo
+# One container, one public port: what free/small hosts (Render, Railway,
+# Hugging Face Spaces) expect. The API listens on 127.0.0.1 only; Streamlit
+# calls it on localhost. The policy PDF is indexed on first start (the Chroma
+# store is empty), not at build time; see README "Deploying a demo".
+FROM base AS demo
+ARG PRELOAD_MODELS=false
+ENV HF_HOME=/models/huggingface     STREAMLIT_BROWSER_GATHER_USAGE_STATS=false     STREAMLIT_SERVER_HEADLESS=true     DEMO_MODE=true     DEFAULT_POLICY_PDF=/app/demo/policy.pdf     PORT=7860     API_PORT=8000
+WORKDIR /app
+RUN --mount=type=bind,from=builder-api,source=/wheels,target=/wheels-api     --mount=type=bind,from=builder-ui,source=/wheels,target=/wheels-ui     --mount=type=bind,source=docker/requirements-api.txt,target=/tmp/requirements-api.txt     --mount=type=bind,source=docker/requirements-ui.txt,target=/tmp/requirements-ui.txt     pip install --no-cache-dir --no-index --find-links /wheels-api --find-links /wheels-ui         -r /tmp/requirements-api.txt -r /tmp/requirements-ui.txt
+RUN mkdir -p /app/data/raw /app/data/processed/chroma /app/demo "$HF_HOME"     && chown -R app:app /app /models
+COPY --chown=app:app app/ ./app/
+COPY --chown=app:app streamlit_app.py ./
+COPY --chown=app:app --chmod=755 docker/start-demo.sh ./start-demo.sh
+COPY --chown=app:app data/raw/StarHealthAssureInsurancePolicy-Policy-wording.pdf /app/demo/policy.pdf
+USER app
+RUN if [ "$PRELOAD_MODELS" = "true" ]; then         python -c "from sentence_transformers import SentenceTransformer, CrossEncoder; SentenceTransformer('BAAI/bge-small-en-v1.5'); CrossEncoder('BAAI/bge-reranker-base'); print('models cached')";     fi
+EXPOSE 7860
+# Healthy once the API has loaded both models and indexed the policy (it only
+# answers /health after startup) and Streamlit is serving.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20m --retries=3     CMD python -c "import os,urllib.request,sys; ok=lambda u: urllib.request.urlopen(u, timeout=4).status == 200; sys.exit(0 if ok('http://127.0.0.1:%s/health' % os.environ['API_PORT']) and ok('http://127.0.0.1:%s/_stcore/health' % os.environ['PORT']) else 1)"
+CMD ["./start-demo.sh"]

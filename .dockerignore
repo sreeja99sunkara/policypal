@@ -6,8 +6,12 @@
 !requirements.txt
 !docker/requirements-api.txt
 !docker/requirements-ui.txt
+!docker/start-demo.sh
 !app/
 !streamlit_app.py
+# The one policy PDF the `demo` target indexes on startup (a public policy
+# wording document). The rest of data/ - uploads, the Chroma index - stays out.
+!data/raw/StarHealthAssureInsurancePolicy-Policy-wording.pdf
 
 # never ship bytecode or secrets even inside allowed paths
 **/__pycache__
