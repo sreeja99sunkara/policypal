@@ -1,0 +1,39 @@
+services:
+  api:
+    build:
+      context: .
+      target: api
+      args:
+        PRELOAD_MODELS: "false"   # "true" bakes the two models into the image
+    image: policypal-api
+    env_file: .env                # GROQ_API_KEY, GROQ_MODEL; read at run time, not copied into the image
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma:/app/data/processed/chroma   # embedded Chroma index (persists across restarts)
+      - hf-cache:/models/huggingface        # HF_HOME: embedding + reranker models
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
+    restart: unless-stopped
+
+  ui:
+    build:
+      context: .
+      target: ui
+    image: policypal-ui
+    environment:
+      POLICYPAL_API_URL: http://api:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  chroma:
+  hf-cache:

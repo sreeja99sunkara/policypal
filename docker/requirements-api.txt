@@ -1,0 +1,23 @@
+# Packages the API imports (app/), pinned to the versions in ../requirements.txt.
+# The Dockerfile installs these with `-c requirements.txt`, so transitive
+# dependencies are also held to the tested versions. torch comes from the
+# CPU-only PyTorch index (2.12.1+cpu satisfies ==2.12.1).
+fastapi==0.138.0
+uvicorn==0.49.0
+python-multipart==0.0.32
+python-dotenv==1.2.2
+pydantic==2.13.4
+langchain-core==1.4.8
+langchain-community==0.4.2
+langchain-text-splitters==1.1.2
+langchain-chroma==1.1.0
+chromadb==1.5.9
+langchain-huggingface==1.2.2
+sentence-transformers==5.6.0
+transformers==5.12.1
+torch==2.12.1
+langchain-groq==1.1.3
+groq==0.37.1
+PyMuPDF==1.27.2.3
+rank-bm25==0.2.2
+numpy==2.5.0

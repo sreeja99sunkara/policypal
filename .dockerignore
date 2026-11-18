@@ -1,0 +1,16 @@
+# Allow-list: send only what the images need to the build context.
+# Everything else (.env, venv/, .git/, data/, eval/, notebooks/, docs/,
+# tests/, scripts/, notes/, caches) is excluded.
+*
+!Dockerfile
+!requirements.txt
+!docker/requirements-api.txt
+!docker/requirements-ui.txt
+!app/
+!streamlit_app.py
+
+# never ship bytecode or secrets even inside allowed paths
+**/__pycache__
+**/*.pyc
+**/.env
+**/.env.*
